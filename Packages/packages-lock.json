@@ -159,7 +159,9 @@
       "version": "file:DeZeroUnity",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {}
+      "dependencies": {
+        "org.nuget.mathnet.numerics": "5.0.0"
+      }
     },
     "org.nuget.mathnet.numerics": {
       "version": "5.0.0",

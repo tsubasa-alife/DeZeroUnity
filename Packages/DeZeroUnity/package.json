@@ -7,5 +7,7 @@
   "license": "MIT",
   "category": "AI",
   "unity": "2020.3",
-  "dependencies": {}
+  "dependencies": {
+    "org.nuget.mathnet.numerics": "5.0.0"
+  }
 }
