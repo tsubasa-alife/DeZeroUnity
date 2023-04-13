@@ -1,6 +1,6 @@
 # DeZeroUnity
-ゼロから作るディープラーニング3で作ったDeep Learning用フレームワークである"DeZero"をUnityで動かせるようにする試みです。  
-※現在は製作途中です
+## 概要
+ゼロから作るディープラーニング3で作ったDeep Learning用フレームワーク [DeZero](https://github.com/oreilly-japan/deep-learning-from-scratch-3) をUnityで動かせるようにする試みです。  
 
 ## インストール方法
 Nugetを利用できるようにするため下記の項目をPackagesのmanifest.json（"dependencies"の上など）に追加してください。
@@ -15,7 +15,8 @@ Nugetを利用できるようにするため下記の項目をPackagesのmanifes
     }
   ],
 ```
-上記項目を追加した上で以下のurlを利用してUPMからパッケージをインストールすることができます。
+上記項目を追加した上で以下のGit URLを利用してUPMからパッケージをインストールすることができます。  
+参考：[Install a package from a Git URL](https://docs.unity3d.com/Manual/upm-ui-giturl.html)
 ```
 https://github.com/tsubasa-alife/DeZeroUnity.git?path=/Packages/DeZeroUnity
 ```
