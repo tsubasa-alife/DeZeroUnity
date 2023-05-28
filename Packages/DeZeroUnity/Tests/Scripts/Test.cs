@@ -10,7 +10,7 @@ public class Test : MonoBehaviour
 	{
 		var x = new Variable(Matrix<float>.Build.Random(2, 3));
 		Debug.Log(x.Data);
-		var f = new Square();
+		var f = new Exp();
 		var y = f.Calculate(x);
 		Debug.Log(y.Data);
 	}

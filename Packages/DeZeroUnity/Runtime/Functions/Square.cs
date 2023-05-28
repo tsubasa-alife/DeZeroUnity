@@ -8,5 +8,12 @@ namespace DeZeroUnity
 		{
 			return x.PointwisePower(2);
 		}
+		
+		protected override Matrix<float> Backward(Matrix<float> gy)
+		{
+			var x = Input.Data;
+			var gx = 2 * x * gy;
+			return gx;
+		}
 	}
 }

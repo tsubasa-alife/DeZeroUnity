@@ -10,6 +10,7 @@ namespace DeZeroUnity
 		}
 	
 		public Matrix<float> Data { get; set; }
+		public Matrix<float> Grad { get; set; }
 	}
 }
 
