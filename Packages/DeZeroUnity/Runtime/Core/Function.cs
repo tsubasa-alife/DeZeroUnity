@@ -13,13 +13,14 @@ namespace DeZeroUnity
 			var x = input.Data;
 			var y = Forward(x);
 			var output = new Variable(y);
+			output.SetCreator(this);
 			Input = input;
 			Output = output;
 			return output;
 		}
 
-		protected abstract Matrix<float> Forward(Matrix<float> x);
-		protected abstract Matrix<float> Backward(Matrix<float> gy);
+		public abstract Matrix<float> Forward(Matrix<float> x);
+		public abstract Matrix<float> Backward(Matrix<float> gy);
 
 	}
 }
