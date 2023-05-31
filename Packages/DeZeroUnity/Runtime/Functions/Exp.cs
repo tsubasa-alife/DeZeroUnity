@@ -15,6 +15,9 @@ namespace DeZeroUnity
 			var gx = gy.PointwiseMultiply(x.PointwiseExp());
 			return gx;
 		}
-
+		
 	}
+	
+	
+	
 }

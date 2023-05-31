@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Single;
 
@@ -21,12 +22,24 @@ namespace DeZeroUnity
 
 		public void Backward()
 		{
-			var function = Creator;
-			if (function != null)
+			if (this.Grad == null)
 			{
+				this.Grad = Matrix<float>.Build.Dense(Data.RowCount, Data.ColumnCount, 1.0f);
+			}
+			
+			var functions = new Stack<Function>();
+			functions.Push(Creator);
+			while (functions.Count > 0)
+			{
+				var function = functions.Pop();
 				var x = function.Input;
-				x.Grad = function.Backward(this.Grad);
-				x.Backward();
+				var y = function.Output;
+				x.Grad = function.Backward(y.Grad);
+				
+				if (x.Creator != null)
+				{
+					functions.Push(x.Creator);
+				}
 			}
 		}
 	}
