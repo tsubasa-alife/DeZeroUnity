@@ -11,12 +11,9 @@ public class Test : MonoBehaviour
 		// 1行1列の行列を作成。初期値は0.5
 		var x = new Variable(Matrix<float>.Build.Dense(1, 1, 0.5f));
 		Debug.Log(x.Data);
-		var f1 = new Square();
-		var f2 = new Exp();
-		var f3 = new Square();
-		var a = f1.Calculate(x);
-		var b = f2.Calculate(a);
-		var y = f3.Calculate(b);
+		var a = Dzf.Square(x);
+		var b = Dzf.Exp(a);
+		var y = Dzf.Square(b);
 		y.Backward();
 		Debug.Log(x.Grad);
 	}
