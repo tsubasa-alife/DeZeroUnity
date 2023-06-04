@@ -10,7 +10,7 @@ jobs:
         projectPath:
           - DeZeroUnity
         unityVersion:
-          - 2021.3.4f1
+          - 2021.3.15f1
         testMode:
           - editmode
     steps:
