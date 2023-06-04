@@ -22,6 +22,6 @@ jobs:
         with:
           customParameters: '-nographics'
           projectPath: ${{ matrix.projectPath }}
-          testMode: ${{ mastrix.testMode }}
+          testMode: ${{ matrix.testMode }}
           unityVersion: ${{ matrix.unityVersion}}
       - run: echo "This job's status is ${{ job.status }}."
