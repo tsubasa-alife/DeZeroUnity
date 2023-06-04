@@ -1,0 +1,27 @@
+name: DeZeroUnityTest
+on:
+  [push]
+jobs:
+  TestFunctions:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        projectPath:
+          - DeZeroUnity
+        unityVersion:
+          - 2021.3.4f1
+        testMode:
+          - editmode
+    steps:
+      - run: echo "DeZeroUnityTest Start"
+      - uses: game-ci/unity-test-runner@v2
+        id: tests
+        env: 
+          UNITY_LISENCE: ${{secrets.UNITY_LICENSE}}
+        with:
+          customParameters: '-nographics'
+          projectPath: ${{ matrix.projectPath }}
+          testMode: ${{ mastrix.testMode }}
+          unityVersion: ${{ matrix.unityVersion}}
+      - run: echo "This job's status is ${{ job.status }}."
