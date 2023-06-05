@@ -16,7 +16,7 @@ jobs:
           key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
             Library-
-      - uses: game-ci/unity-test-runner@v2.1.0
+      - uses: game-ci/unity-test-runner@v2.1.1
         id: tests
         env: 
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -25,5 +25,5 @@ jobs:
           projectPath: .
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           testMode: editMode
-          unityVersion: 2021.3.15f1
+          unityVersion: 2020.3.9f1
       - run: echo "This job's status is ${{ job.status }}."
