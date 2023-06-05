@@ -6,9 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "DeZeroUnityTest Start"
-      # Actionsがリポジトリにアクセスできるようにしている
+      # Actionsがリポジトリにアクセスできるようにする
       - uses: actions/checkout@v3
-      # Libraryをキャッシュすることで高速化している
+      # Libraryをキャッシュすることで高速化する
       - uses: actions/cache@v3
         with:
           path: Library
