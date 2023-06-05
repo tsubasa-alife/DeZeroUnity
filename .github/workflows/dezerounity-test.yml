@@ -2,17 +2,8 @@ name: DeZeroUnityTest
 on:
   [push]
 jobs:
-  TestFunctions:
+  TestDeZeroUnity:
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        projectPath:
-          - DeZeroUnity
-        unityVersion:
-          - 2021.3.15f1
-        testMode:
-          - editmode
     steps:
       - run: echo "DeZeroUnityTest Start"
       # Actionsがリポジトリにアクセスできるようにしている
@@ -20,8 +11,8 @@ jobs:
       # Libraryをキャッシュすることで高速化している
       - uses: actions/cache@v3
         with:
-          path: ${{ matrix.projectPath }}/Library
-          key: Library-${{ matrix.projectPath }}
+          path: Library
+          key: Library-${{ hashFiles('Assets/**', 'Packages/**', 'ProjectSettings/**') }}
           restore-keys: |
             Library-
       - uses: game-ci/unity-test-runner@v2
@@ -30,8 +21,7 @@ jobs:
           UNITY_LISENCE: ${{secrets.UNITY_LICENSE}}
         with:
           customParameters: '-nographics'
-          projectPath: ${{ matrix.projectPath }}
           githubToken: ${{ secrets.GITHUB_TOKEN }}
-          testMode: ${{ matrix.testMode }}
-          unityVersion: ${{ matrix.unityVersion}}
+          testMode: editMode
+          unityVersion: 2021.3.15f1
       - run: echo "This job's status is ${{ job.status }}."
