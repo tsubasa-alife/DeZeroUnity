@@ -18,10 +18,11 @@ jobs:
       - uses: game-ci/unity-test-runner@v2
         id: tests
         env: 
-          UNITY_LISENCE: ${{secrets.UNITY_LICENSE}}
+          UNITY_LISENCE: ${{ secrets.UNITY_LICENSE }}
         with:
           customParameters: '-nographics'
+          projectPath: .
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           testMode: editMode
-          unityVersion: 2019.2.11f1
+          unityVersion: 2021.3.15f1
       - run: echo "This job's status is ${{ job.status }}."
