@@ -1,6 +1,7 @@
 name: DeZeroUnityTest
 on:
-  [push]
+  workflow_dispatch:
+  push:
 jobs:
   TestDeZeroUnity:
     runs-on: ubuntu-latest
