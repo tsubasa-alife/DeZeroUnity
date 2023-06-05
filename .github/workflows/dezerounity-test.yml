@@ -23,6 +23,12 @@ jobs:
         with:
           customParameters: '-batchmode'
           projectPath: .
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
           testMode: editMode
           unityVersion: 2021.3.4f1
+      - uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: TestResults
+          path: artifacts
       - run: echo "This job's status is ${{ job.status }}."
