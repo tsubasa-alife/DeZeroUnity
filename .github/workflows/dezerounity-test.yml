@@ -23,7 +23,6 @@ jobs:
         with:
           customParameters: '-batchmode'
           projectPath: .
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
           testMode: editMode
           unityVersion: 2021.3.4f1
       - run: echo "This job's status is ${{ job.status }}."
