@@ -19,7 +19,7 @@ jobs:
       - uses: game-ci/unity-test-runner@v2
         id: tests
         env: 
-          UNITY_LISENCE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
           customParameters: '-nographics'
           projectPath: .
