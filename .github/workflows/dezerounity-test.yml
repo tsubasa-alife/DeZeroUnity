@@ -21,7 +21,7 @@ jobs:
         env: 
           UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
         with:
-          customParameters: '-nographics'
+          customParameters: '-batchmode'
           projectPath: .
           githubToken: ${{ secrets.GITHUB_TOKEN }}
           testMode: editMode
