@@ -1,26 +1,38 @@
 using System;
+using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace DeZeroUnity
 {
 	public abstract class Function
 	{
-		public Variable Input { get; set; }
-		public Variable Output { get; set; }
+		public List<Variable> Inputs { get; set; }
+		public List<Variable> Outputs { get; set; }
 
-		public Variable Calculate(Variable input)
+		public List<Variable> Calculate(List<Variable> inputs)
 		{
-			var x = input.Data;
-			var y = Forward(x);
-			var output = new Variable(y);
-			output.SetCreator(this);
-			Input = input;
-			Output = output;
-			return output;
+			var xs = new List<Matrix<float>>();
+			foreach (var input in inputs)
+			{
+				xs.Add(input.Data);
+			}
+			var ys = Forward(xs);
+			var outputs = new List<Variable>();
+			foreach (var y in ys)
+			{
+				outputs.Add(new Variable(y));
+			}
+			foreach (var output in outputs)
+			{
+				output.SetCreator(this);
+			}
+			Inputs = inputs;
+			Outputs = outputs;
+			return outputs;
 		}
 
-		public abstract Matrix<float> Forward(Matrix<float> x);
-		public abstract Matrix<float> Backward(Matrix<float> gy);
+		public abstract List<Matrix<float>> Forward(List<Matrix<float>> xs);
+		public abstract List<Matrix<float>> Backward(List<Matrix<float>> gys);
 
 	}
 }

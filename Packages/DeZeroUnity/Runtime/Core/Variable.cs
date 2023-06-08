@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Single;
 
@@ -32,13 +33,20 @@ namespace DeZeroUnity
 			while (functions.Count > 0)
 			{
 				var function = functions.Pop();
-				var x = function.Input;
-				var y = function.Output;
-				x.Grad = function.Backward(y.Grad);
-				
-				if (x.Creator != null)
+				var gys = new List<Matrix<float>>();
+				foreach (var output in function.Outputs)
 				{
-					functions.Push(x.Creator);
+					gys.Add(output.Grad);
+				}
+				var gxs = function.Backward(gys);
+				// function.Inputsとgxsをzip
+				foreach (var (x, gx) in function.Inputs.Zip(gxs, (x, gx) => (x, gx)))
+				{
+					x.Grad = gx;
+					if (x.Creator != null)
+					{
+						functions.Push(x.Creator);
+					}
 				}
 			}
 		}

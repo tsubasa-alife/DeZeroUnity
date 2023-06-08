@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace DeZeroUnity
 {
 	/// <summary>
@@ -5,14 +7,14 @@ namespace DeZeroUnity
 	/// </summary>
 	public  static class Dzf
 	{
-		public static Variable Square(Variable x)
+		public static List<Variable> Square(List<Variable> xs)
 		{
-			return new Square().Calculate(x);
+			return new Square().Calculate(xs);
 		}
 		
-		public static Variable Exp(Variable x)
+		public static List<Variable> Exp(List<Variable> xs)
 		{
-			return new Exp().Calculate(x);
+			return new Exp().Calculate(xs);
 		}
 	}
 }

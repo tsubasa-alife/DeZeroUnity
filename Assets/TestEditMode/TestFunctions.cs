@@ -14,17 +14,19 @@ public class TestFunctions
     public void TestSquareForward()
     {
         var x = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
-        var y = Dzf.Square(x);
+        var xs = new List<Variable> { x };
+        var ys = Dzf.Square(xs);
         var expected = Matrix<float>.Build.Dense(1, 1, 4.0f);
-        Assert.AreEqual(y.Data, expected);
+        Assert.AreEqual(ys[0].Data, expected);
     }
     
     [Test]
     public void TestSquareBackward()
     {
         var x = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
-        var y = Dzf.Square(x);
-        y.Backward();
+        var xs = new List<Variable> { x };
+        var ys = Dzf.Square(xs);
+        ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 6.0f);
         Assert.AreEqual(x.Grad, expected);
     }
@@ -33,8 +35,9 @@ public class TestFunctions
     public void TestSquareGradientCheck()
     {
         var x = new Variable(Matrix<float>.Build.Random(1, 1));
-        var y = Dzf.Square(x);
-        y.Backward();
+        var xs = new List<Variable> { x };
+        var ys = Dzf.Square(xs);
+        ys[0].Backward();
         var function = new Square() as Function;
         var numGrad = NumericalDiff(function, x);
         // 2つの勾配の差が小さいかどうかを確認
@@ -54,9 +57,11 @@ public class TestFunctions
     {
         var x1 = new Variable(x.Data - eps);
         var x2 = new Variable(x.Data + eps);
-        var y1 = function.Calculate(x1);
-        var y2 = function.Calculate(x2);
-        var diff = (y2.Data - y1.Data) / (2 * eps);
+        var xs1 = new List<Variable> { x1 };
+        var xs2 = new List<Variable> { x2 };
+        var y1 = function.Calculate(xs1);
+        var y2 = function.Calculate(xs2);
+        var diff = (y2[0].Data - y1[0].Data) / (2 * eps);
         return diff;
     }
 }

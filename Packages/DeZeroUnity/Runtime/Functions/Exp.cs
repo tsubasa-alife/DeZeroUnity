@@ -1,19 +1,25 @@
+using System.Collections.Generic;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace DeZeroUnity
 {
 	public class Exp : Function
 	{
-		public override Matrix<float> Forward(Matrix<float> x)
+		public override List<Matrix<float>> Forward(List<Matrix<float>> xs)
 		{
-			return x.PointwiseExp();
+			var ys = new List<Matrix<float>>();
+			var x = xs[0];
+			ys.Add(x.PointwiseExp());
+			return ys;
 		}
 		
-		public override Matrix<float> Backward(Matrix<float> gy)
+		public override List<Matrix<float>> Backward(List<Matrix<float>> gys)
 		{
-			var x = Input.Data;
+			var x = Inputs[0].Data;
+			var gy = gys[0];
 			var gx = gy.PointwiseMultiply(x.PointwiseExp());
-			return gx;
+			var gxs = new List<Matrix<float>> { gx };
+			return gxs;
 		}
 		
 	}
