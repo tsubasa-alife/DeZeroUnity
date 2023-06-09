@@ -16,5 +16,10 @@ namespace DeZeroUnity
 		{
 			return new Exp().Calculate(xs);
 		}
+		
+		public static List<Variable> Add(Variable x0, Variable x1)
+		{
+			return new Add().Calculate(new List<Variable> {x0, x1});
+		}
 	}
 }
