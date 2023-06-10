@@ -16,6 +16,7 @@ namespace DeZeroUnity
 		
 		public override List<Matrix<float>> Backward(List<Matrix<float>> gys)
 		{
+			gys.Add(gys[0]);
 			return gys;
 		}
 	}

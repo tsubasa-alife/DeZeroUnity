@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Single;
+using UnityEngine;
 
 namespace DeZeroUnity
 {
@@ -19,6 +20,11 @@ namespace DeZeroUnity
 		public void SetCreator(Function func)
 		{
 			Creator = func;
+		}
+		
+		public void ClearGrad()
+		{
+			this.Grad = null;
 		}
 
 		public void Backward()
@@ -42,7 +48,15 @@ namespace DeZeroUnity
 				// function.Inputsとgxsをzip
 				foreach (var (x, gx) in function.Inputs.Zip(gxs, (x, gx) => (x, gx)))
 				{
-					x.Grad = gx;
+					if (x.Grad == null)
+					{
+						x.Grad = gx;
+					}
+					else
+					{
+						x.Grad = x.Grad + gx;
+					}
+					
 					if (x.Creator != null)
 					{
 						functions.Push(x.Creator);

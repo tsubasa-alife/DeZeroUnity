@@ -45,6 +45,74 @@ public class TestFunctions
         bool isEqual = x.Grad.AlmostEqual(numGrad, tolerance);
         Assert.IsTrue(isEqual);
     }
+    
+    [Test]
+    public void TestExpForward()
+    {
+        var x = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
+        var xs = new List<Variable> { x };
+        var ys = Dzf.Exp(xs);
+        var expected = Matrix<float>.Build.Dense(1, 1, 7.389056f);
+        Assert.AreEqual(ys[0].Data, expected);
+    }
+    
+    [Test]
+    public void TestExpBackward()
+    {
+        var x = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
+        var xs = new List<Variable> { x };
+        var ys = Dzf.Exp(xs);
+        ys[0].Backward();
+        var expected = Matrix<float>.Build.Dense(1, 1, 20.085537f);
+        Assert.AreEqual(x.Grad, expected);
+    }
+    
+    [Test]
+    public void TestExpGradientCheck()
+    {
+        var x = new Variable(Matrix<float>.Build.Random(1, 1));
+        var xs = new List<Variable> { x };
+        var ys = Dzf.Exp(xs);
+        ys[0].Backward();
+        var function = new Exp() as Function;
+        var numGrad = NumericalDiff(function, x);
+        // 2つの勾配の差が小さいかどうかを確認
+        var tolerance = 1e-2f;
+        bool isEqual = x.Grad.AlmostEqual(numGrad, tolerance);
+        Assert.IsTrue(isEqual);
+    }
+    
+    [Test]
+    public void TestAddForward()
+    {
+        var x0 = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
+        var x1 = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
+        var ys = Dzf.Add(x0, x1);
+        var expected = Matrix<float>.Build.Dense(1, 1, 5.0f);
+        Assert.AreEqual(ys[0].Data, expected);
+    }
+    
+    [Test]
+    public void TestAddBackward()
+    {
+        var x0 = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
+        var x1 = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
+        var ys = Dzf.Add(x0, x1);
+        ys[0].Backward();
+        var expected = Matrix<float>.Build.Dense(1, 1, 1.0f);
+        Assert.AreEqual(x0.Grad, expected);
+        Assert.AreEqual(x1.Grad, expected);
+    }
+    
+    [Test]
+    public void TestAddSameBackward()
+    {
+        var x0 = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
+        var ys = Dzf.Add(x0, x0);
+        ys[0].Backward();
+        var expected = Matrix<float>.Build.Dense(1, 1, 2.0f);
+        Assert.AreEqual(x0.Grad, expected);
+    }
 
     /// <summary>
     /// 勾配確認のための数値微分用メソッド
