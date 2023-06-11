@@ -135,7 +135,7 @@ public class TestFunctions
     /// <param name="x"></param>
     /// <param name="eps"></param>
     /// <returns></returns>
-    private Matrix<float> NumericalDiff(Function function, Variable x, float eps = 1e-4f)
+    private Matrix<float> NumericalDiff(Function function, Variable x, float eps = 1e-2f)
     {
         var x1 = new Variable(x.Data - eps);
         var x2 = new Variable(x.Data + eps);
