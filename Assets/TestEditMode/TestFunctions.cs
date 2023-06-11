@@ -17,7 +17,7 @@ public class TestFunctions
         var xs = new List<Variable> { x };
         var ys = Dzf.Square(xs);
         var expected = Matrix<float>.Build.Dense(1, 1, 4.0f);
-        Assert.AreEqual(ys[0].Data, expected);
+        Assert.AreEqual(expected, ys[0].Data);
     }
     
     [Test]
@@ -28,7 +28,7 @@ public class TestFunctions
         var ys = Dzf.Square(xs);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 6.0f);
-        Assert.AreEqual(x.Grad, expected);
+        Assert.AreEqual(expected, x.Grad);
     }
 
     [Test]
@@ -53,7 +53,7 @@ public class TestFunctions
         var xs = new List<Variable> { x };
         var ys = Dzf.Exp(xs);
         var expected = Matrix<float>.Build.Dense(1, 1, 7.389056f);
-        Assert.AreEqual(ys[0].Data, expected);
+        Assert.AreEqual(expected, ys[0].Data);
     }
     
     [Test]
@@ -64,7 +64,7 @@ public class TestFunctions
         var ys = Dzf.Exp(xs);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 20.085537f);
-        Assert.AreEqual(x.Grad, expected);
+        Assert.AreEqual(expected, x.Grad);
     }
     
     [Test]
@@ -89,7 +89,7 @@ public class TestFunctions
         var x1 = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
         var ys = Dzf.Add(x0, x1);
         var expected = Matrix<float>.Build.Dense(1, 1, 5.0f);
-        Assert.AreEqual(ys[0].Data, expected);
+        Assert.AreEqual(expected, ys[0].Data);
     }
     
     [Test]
@@ -100,8 +100,8 @@ public class TestFunctions
         var ys = Dzf.Add(x0, x1);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 1.0f);
-        Assert.AreEqual(x0.Grad, expected);
-        Assert.AreEqual(x1.Grad, expected);
+        Assert.AreEqual(expected, x0.Grad);
+        Assert.AreEqual(expected, x1.Grad);
     }
     
     [Test]
@@ -111,7 +111,21 @@ public class TestFunctions
         var ys = Dzf.Add(x0, x0);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 2.0f);
-        Assert.AreEqual(x0.Grad, expected);
+        Assert.AreEqual(expected, x0.Grad);
+    }
+
+    [Test]
+    public void TestComplexBackward()
+    {
+        var x = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
+        var xs = new List<Variable> { x };
+        var a = Dzf.Square(xs);
+        var b = Dzf.Square(a);
+        var c = Dzf.Square(a);
+        var ys = Dzf.Add(b[0], c[0]);
+        ys[0].Backward();
+        var expected = Matrix<float>.Build.Dense(1, 1, 64.0f);
+        Assert.AreEqual(expected, x.Grad);
     }
 
     /// <summary>

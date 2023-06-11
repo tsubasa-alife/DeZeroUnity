@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 
 namespace DeZeroUnity
@@ -8,6 +9,7 @@ namespace DeZeroUnity
 	{
 		public List<Variable> Inputs { get; set; }
 		public List<Variable> Outputs { get; set; }
+		public int Generation { get; set; }
 
 		public List<Variable> Calculate(List<Variable> inputs)
 		{
@@ -22,6 +24,7 @@ namespace DeZeroUnity
 			{
 				outputs.Add(new Variable(y));
 			}
+			Generation = inputs.Max(x => x.Generation);
 			foreach (var output in outputs)
 			{
 				output.SetCreator(this);

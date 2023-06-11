@@ -11,20 +11,33 @@ namespace DeZeroUnity
 		public Variable(Matrix<float> data)
 		{
 			Data = data;
+			Generation = 0;
 		}
 	
 		public Matrix<float> Data { get; set; }
 		public Matrix<float> Grad { get; set; }
 		private Function Creator { get; set; }
+		public int Generation { get; set; }
 
 		public void SetCreator(Function func)
 		{
 			Creator = func;
+			Generation = func.Generation + 1;
 		}
 		
 		public void ClearGrad()
 		{
 			this.Grad = null;
+		}
+
+		private void AddFunc(ref Stack<Function> functions, HashSet<Function> seenSet, Function function)
+		{
+			if (!seenSet.Contains(function))
+			{
+				functions.Push(function);
+				seenSet.Add(function);
+				functions = new Stack<Function>(functions.OrderBy(x => x.Generation));
+			}
 		}
 
 		public void Backward()
@@ -35,7 +48,9 @@ namespace DeZeroUnity
 			}
 			
 			var functions = new Stack<Function>();
-			functions.Push(Creator);
+			var seenSet = new HashSet<Function>();
+			AddFunc(ref functions, seenSet, Creator);
+			
 			while (functions.Count > 0)
 			{
 				var function = functions.Pop();
@@ -59,7 +74,7 @@ namespace DeZeroUnity
 					
 					if (x.Creator != null)
 					{
-						functions.Push(x.Creator);
+						AddFunc(ref functions, seenSet, x.Creator);
 					}
 				}
 			}
