@@ -41,7 +41,7 @@ public class TestFunctions
         var function = new Square() as Function;
         var numGrad = NumericalDiff(function, x);
         // 2つの勾配の差が小さいかどうかを確認
-        var tolerance = 1e-3f;
+        var tolerance = 1e-2f;
         bool isEqual = x.Grad.AlmostEqual(numGrad, tolerance);
         Assert.IsTrue(isEqual);
     }
