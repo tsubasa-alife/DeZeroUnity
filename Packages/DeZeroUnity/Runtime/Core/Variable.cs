@@ -40,7 +40,7 @@ namespace DeZeroUnity
 			}
 		}
 
-		public void Backward()
+		public void Backward(bool retainGrad = false)
 		{
 			if (this.Grad == null)
 			{
@@ -75,6 +75,13 @@ namespace DeZeroUnity
 					if (x.Creator != null)
 					{
 						AddFunc(ref functions, seenSet, x.Creator);
+					}
+				}
+				if (!retainGrad)
+				{
+					foreach (var y in function.Outputs)
+					{
+						y.ClearGrad();
 					}
 				}
 			}

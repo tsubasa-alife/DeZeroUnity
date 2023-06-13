@@ -24,13 +24,17 @@ namespace DeZeroUnity
 			{
 				outputs.Add(new Variable(y));
 			}
-			Generation = inputs.Max(x => x.Generation);
-			foreach (var output in outputs)
+
+			if (Config.enableBackprop)
 			{
-				output.SetCreator(this);
+				Generation = inputs.Max(x => x.Generation);
+				foreach (var output in outputs)
+				{
+					output.SetCreator(this);
+				}
+				Inputs = inputs;
+				Outputs = outputs;
 			}
-			Inputs = inputs;
-			Outputs = outputs;
 			return outputs;
 		}
 
