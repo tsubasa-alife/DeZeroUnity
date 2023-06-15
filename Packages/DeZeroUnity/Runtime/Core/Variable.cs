@@ -99,9 +99,33 @@ namespace DeZeroUnity
 			return Dzf.Add(a, b)[0];
 		}
 		
+		public static Variable operator +(Variable a, float b)
+		{
+			var bVar = new Variable(Matrix<float>.Build.Dense(a.Data.RowCount, a.Data.ColumnCount, b));
+			return Dzf.Add(a, bVar)[0];
+		}
+		
+		public static Variable operator +(float a, Variable b)
+		{
+			var aVar = new Variable(Matrix<float>.Build.Dense(b.Data.RowCount, b.Data.ColumnCount, a));
+			return Dzf.Add(aVar, b)[0];
+		}
+		
 		public static Variable operator *(Variable a, Variable b)
 		{
 			return Dzf.Mul(a, b)[0];
+		}
+		
+		public static Variable operator *(Variable a, float b)
+		{
+			var bVar = new Variable(Matrix<float>.Build.Dense(a.Data.RowCount, a.Data.ColumnCount, b));
+			return Dzf.Mul(a, bVar)[0];
+		}
+		
+		public static Variable operator *(float a, Variable b)
+		{
+			var aVar = new Variable(Matrix<float>.Build.Dense(b.Data.RowCount, b.Data.ColumnCount, a));
+			return Dzf.Mul(aVar, b)[0];
 		}
 	}
 }
