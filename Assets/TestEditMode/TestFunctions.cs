@@ -128,6 +128,18 @@ public class TestFunctions
         Assert.AreEqual(expected, x.Grad);
     }
 
+    [Test]
+    public void TestOverLoad()
+    {
+        var a = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
+        var b = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
+        var c = new Variable(Matrix<float>.Build.Dense(1, 1, 1.0f));
+        var ys = a * b + c;
+        ys.Backward();
+        var expected = Matrix<float>.Build.Dense(1, 1, 2.0f);
+        Assert.AreEqual(expected, a.Grad);
+    }
+
     /// <summary>
     /// 勾配確認のための数値微分用メソッド
     /// </summary>

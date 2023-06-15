@@ -21,5 +21,10 @@ namespace DeZeroUnity
 		{
 			return new Add().Calculate(new List<Variable> {x0, x1});
 		}
+		
+		public static List<Variable> Mul(Variable x0, Variable x1)
+		{
+			return new Mul().Calculate(new List<Variable> {x0, x1});
+		}
 	}
 }

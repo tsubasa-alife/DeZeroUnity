@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
@@ -18,6 +19,11 @@ namespace DeZeroUnity
 		public Matrix<float> Grad { get; set; }
 		private Function Creator { get; set; }
 		public int Generation { get; set; }
+		
+		public Tuple<int, int> Shape => new Tuple<int, int>(Data.RowCount, Data.ColumnCount);
+		public int Ndim => Data.RowCount;
+		public int Size => Data.RowCount * Data.ColumnCount;
+
 
 		public void SetCreator(Function func)
 		{
@@ -85,6 +91,17 @@ namespace DeZeroUnity
 					}
 				}
 			}
+		}
+		
+		// 以下は演算子オーバーロード
+		public static Variable operator +(Variable a, Variable b)
+		{
+			return Dzf.Add(a, b)[0];
+		}
+		
+		public static Variable operator *(Variable a, Variable b)
+		{
+			return Dzf.Mul(a, b)[0];
 		}
 	}
 }
