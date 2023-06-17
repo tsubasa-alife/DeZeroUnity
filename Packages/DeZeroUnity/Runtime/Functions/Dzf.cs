@@ -26,5 +26,25 @@ namespace DeZeroUnity
 		{
 			return new Mul().Calculate(new List<Variable> {x0, x1});
 		}
+		
+		public static List<Variable> Neg(Variable x)
+		{
+			return new Neg().Calculate(new List<Variable> {x});
+		}
+		
+		public static List<Variable> Sub(Variable x0, Variable x1)
+		{
+			return new Sub().Calculate(new List<Variable> {x0, x1});
+		}
+		
+		public static List<Variable> Div(Variable x0, Variable x1)
+		{
+			return new Div().Calculate(new List<Variable> {x0, x1});
+		}
+		
+		public static List<Variable> Pow(Variable x, float c)
+		{
+			return new Pow(c).Calculate(new List<Variable> {x});
+		}
 	}
 }

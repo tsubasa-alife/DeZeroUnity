@@ -93,7 +93,7 @@ namespace DeZeroUnity
 			}
 		}
 		
-		// 以下は演算子オーバーロード
+		// 演算子オーバーロード
 		public static Variable operator +(Variable a, Variable b)
 		{
 			return Dzf.Add(a, b)[0];
@@ -111,6 +111,28 @@ namespace DeZeroUnity
 			return Dzf.Add(aVar, b)[0];
 		}
 		
+		public static Variable operator -(Variable a)
+		{
+			return Dzf.Neg(a)[0];
+		}
+		
+		public static Variable operator -(Variable a, Variable b)
+		{
+			return Dzf.Sub(a, b)[0];
+		}
+		
+		public static Variable operator -(Variable a, float b)
+		{
+			var bVar = new Variable(Matrix<float>.Build.Dense(a.Data.RowCount, a.Data.ColumnCount, b));
+			return Dzf.Sub(a, bVar)[0];
+		}
+		
+		public static Variable operator -(float a, Variable b)
+		{
+			var aVar = new Variable(Matrix<float>.Build.Dense(b.Data.RowCount, b.Data.ColumnCount, a));
+			return Dzf.Sub(aVar, b)[0];
+		}
+		
 		public static Variable operator *(Variable a, Variable b)
 		{
 			return Dzf.Mul(a, b)[0];
@@ -126,6 +148,28 @@ namespace DeZeroUnity
 		{
 			var aVar = new Variable(Matrix<float>.Build.Dense(b.Data.RowCount, b.Data.ColumnCount, a));
 			return Dzf.Mul(aVar, b)[0];
+		}
+		
+		public static Variable operator /(Variable a, Variable b)
+		{
+			return Dzf.Div(a, b)[0];
+		}
+		
+		public static Variable operator /(Variable a, float b)
+		{
+			var bVar = new Variable(Matrix<float>.Build.Dense(a.Data.RowCount, a.Data.ColumnCount, b));
+			return Dzf.Div(a, bVar)[0];
+		}
+		
+		public static Variable operator /(float a, Variable b)
+		{
+			var aVar = new Variable(Matrix<float>.Build.Dense(b.Data.RowCount, b.Data.ColumnCount, a));
+			return Dzf.Div(aVar, b)[0];
+		}
+		
+		public static Variable operator ^(Variable a, float b)
+		{
+			return Dzf.Pow(a, b)[0];
 		}
 	}
 }
