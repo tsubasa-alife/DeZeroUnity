@@ -81,38 +81,6 @@ public class TestFunctions
         bool isEqual = x.Grad.AlmostEqual(numGrad, tolerance);
         Assert.IsTrue(isEqual);
     }
-    
-    [Test]
-    public void TestAddForward()
-    {
-        var x0 = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
-        var x1 = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
-        var ys = Dzf.Add(x0, x1);
-        var expected = Matrix<float>.Build.Dense(1, 1, 5.0f);
-        Assert.AreEqual(expected, ys[0].Data);
-    }
-    
-    [Test]
-    public void TestAddBackward()
-    {
-        var x0 = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
-        var x1 = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
-        var ys = Dzf.Add(x0, x1);
-        ys[0].Backward();
-        var expected = Matrix<float>.Build.Dense(1, 1, 1.0f);
-        Assert.AreEqual(expected, x0.Grad);
-        Assert.AreEqual(expected, x1.Grad);
-    }
-    
-    [Test]
-    public void TestAddSameBackward()
-    {
-        var x0 = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
-        var ys = Dzf.Add(x0, x0);
-        ys[0].Backward();
-        var expected = Matrix<float>.Build.Dense(1, 1, 2.0f);
-        Assert.AreEqual(expected, x0.Grad);
-    }
 
     [Test]
     public void TestComplexBackward()
@@ -129,15 +97,51 @@ public class TestFunctions
     }
 
     [Test]
-    public void TestOverLoad()
+    public void TestSphereBackward()
     {
-        var a = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
-        var b = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
-        var c = new Variable(Matrix<float>.Build.Dense(1, 1, 1.0f));
-        var ys = a * b + c;
-        ys.Backward();
+        var x = new Variable(Matrix<float>.Build.Dense(1, 1, 1.0f));
+        var y = new Variable(Matrix<float>.Build.Dense(1, 1, 1.0f));
+        var z = (x ^ 2) + (y ^ 2);
+        z.Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 2.0f);
-        Assert.AreEqual(expected, a.Grad);
+        Assert.AreEqual(expected, x.Grad);
+        Assert.AreEqual(expected, y.Grad);
+    }
+    
+    [Test]
+    // ReSharper disable once IdentifierTypo
+    public void TestMatyas()
+    {
+        var x = new Variable(Matrix<float>.Build.Dense(1, 1, 1.0f));
+        var y = new Variable(Matrix<float>.Build.Dense(1, 1, 1.0f));
+        var z = 0.26f * ((x ^ 2) + (y ^ 2)) - 0.48f * x * y;
+        z.Backward();
+        var expectedX = Matrix<float>.Build.Dense(1, 1, 0.04000002f);
+        var expectedY = Matrix<float>.Build.Dense(1, 1, 0.04000002f);
+        // 2つの勾配の差が小さいかどうかを確認
+        var tolerance = 1e-4f;
+        bool isEqualX = x.Grad.AlmostEqual(expectedX, tolerance);
+        bool isEqualY = y.Grad.AlmostEqual(expectedY, tolerance);
+        Assert.IsTrue(isEqualX);
+        Assert.IsTrue(isEqualY);
+    }
+
+    [Test]
+    public void TestGoldStein()
+    {
+        var x = new Variable(Matrix<float>.Build.Dense(1, 1, 1.0f));
+        var y = new Variable(Matrix<float>.Build.Dense(1, 1, 1.0f));
+        var z = (1 + ((x + y + 1) ^ 2) * (19 - 14 * x + 3 * (x ^ 2) - 14 * y + 6 * x * y + 3 * (y ^ 2))) *
+                (30 + ((2 * x - 3 * y) ^ 2) * (18 - 32 * x + 12 * (x ^ 2) + 48 * y - 36 * x * y + 27 * (y ^ 2)));
+        z.Backward();
+        var expectedX = Matrix<float>.Build.Dense(1, 1, -5376.0f);
+        var expectedY = Matrix<float>.Build.Dense(1, 1, 8064.0f);
+        // 2つの勾配の差が小さいかどうかを確認
+        var tolerance = 1e-4f;
+        bool isEqualX = x.Grad.AlmostEqual(expectedX, tolerance);
+        bool isEqualY = y.Grad.AlmostEqual(expectedY, tolerance);
+        Assert.IsTrue(isEqualX);
+        Assert.IsTrue(isEqualY);
     }
 
     /// <summary>
