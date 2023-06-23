@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MathNet.Numerics;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Single;
 using UnityEngine;
@@ -16,7 +17,8 @@ namespace DeZeroUnity
 		}
 	
 		public Matrix<float> Data { get; set; }
-		public Matrix<float> Grad { get; set; }
+		//public Matrix<float> Grad { get; set; }
+		public Variable Grad { get; set; }
 		private Function Creator { get; set; }
 		public int Generation { get; set; }
 		
@@ -50,7 +52,7 @@ namespace DeZeroUnity
 		{
 			if (this.Grad == null)
 			{
-				this.Grad = Matrix<float>.Build.Dense(Data.RowCount, Data.ColumnCount, 1.0f);
+				this.Grad = new Variable(Matrix<float>.Build.Dense(Data.RowCount, Data.ColumnCount, 1.0f));
 			}
 			
 			var functions = new Stack<Function>();
@@ -60,7 +62,7 @@ namespace DeZeroUnity
 			while (functions.Count > 0)
 			{
 				var function = functions.Pop();
-				var gys = new List<Matrix<float>>();
+				var gys = new List<Variable>();
 				foreach (var output in function.Outputs)
 				{
 					gys.Add(output.Grad);
@@ -91,6 +93,11 @@ namespace DeZeroUnity
 					}
 				}
 			}
+		}
+		
+		public bool AlmostEqual(Variable other, float tolerance = 1e-5f)
+		{
+			return this.Data.AlmostEqual(other.Data, tolerance);
 		}
 		
 		// 演算子オーバーロード
