@@ -17,7 +17,6 @@ namespace DeZeroUnity
 		}
 	
 		public Matrix<float> Data { get; set; }
-		//public Matrix<float> Grad { get; set; }
 		public Variable Grad { get; set; }
 		private Function Creator { get; set; }
 		public int Generation { get; set; }
@@ -48,7 +47,7 @@ namespace DeZeroUnity
 			}
 		}
 
-		public void Backward(bool retainGrad = false)
+		public void Backward(bool retainGrad = false, bool createGraph = false)
 		{
 			if (this.Grad == null)
 			{
@@ -67,22 +66,26 @@ namespace DeZeroUnity
 				{
 					gys.Add(output.Grad);
 				}
-				var gxs = function.Backward(gys);
-				// function.Inputsとgxsをzip
-				foreach (var (x, gx) in function.Inputs.Zip(gxs, (x, gx) => (x, gx)))
+
+				using (ConfigUtils.UsingConfig("enableBackprop", createGraph))
 				{
-					if (x.Grad == null)
+					var gxs = function.Backward(gys);
+					// function.Inputsとgxsをzip
+					foreach (var (x, gx) in function.Inputs.Zip(gxs, (x, gx) => (x, gx)))
 					{
-						x.Grad = gx;
-					}
-					else
-					{
-						x.Grad = x.Grad + gx;
-					}
+						if (x.Grad == null)
+						{
+							x.Grad = gx;
+						}
+						else
+						{
+							x.Grad = x.Grad + gx;
+						}
 					
-					if (x.Creator != null)
-					{
-						AddFunc(ref functions, seenSet, x.Creator);
+						if (x.Creator != null)
+						{
+							AddFunc(ref functions, seenSet, x.Creator);
+						}
 					}
 				}
 				if (!retainGrad)
@@ -94,12 +97,7 @@ namespace DeZeroUnity
 				}
 			}
 		}
-		
-		public bool AlmostEqual(Variable other, float tolerance = 1e-5f)
-		{
-			return this.Data.AlmostEqual(other.Data, tolerance);
-		}
-		
+
 		// 演算子オーバーロード
 		public static Variable operator +(Variable a, Variable b)
 		{

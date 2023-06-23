@@ -28,7 +28,7 @@ public class TestFunctions
         var ys = Dzf.Square(xs);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 6.0f);
-        Assert.AreEqual(expected, x.Grad);
+        Assert.AreEqual(expected, x.Grad.Data);
     }
 
     [Test]
@@ -42,7 +42,7 @@ public class TestFunctions
         var numGrad = NumericalDiff(function, x);
         // 2つの勾配の差が小さいかどうかを確認
         var tolerance = 1e-2f;
-        bool isEqual = x.Grad.AlmostEqual(numGrad, tolerance);
+        bool isEqual = x.Grad.Data.AlmostEqual(numGrad, tolerance);
         Assert.IsTrue(isEqual);
     }
     
@@ -64,7 +64,7 @@ public class TestFunctions
         var ys = Dzf.Exp(xs);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 20.085537f);
-        Assert.AreEqual(expected, x.Grad);
+        Assert.AreEqual(expected, x.Grad.Data);
     }
     
     [Test]
@@ -78,7 +78,7 @@ public class TestFunctions
         var numGrad = NumericalDiff(function, x);
         // 2つの勾配の差が小さいかどうかを確認
         var tolerance = 1e-2f;
-        bool isEqual = x.Grad.AlmostEqual(numGrad, tolerance);
+        bool isEqual = x.Grad.Data.AlmostEqual(numGrad, tolerance);
         Assert.IsTrue(isEqual);
     }
 
@@ -93,7 +93,7 @@ public class TestFunctions
         var ys = Dzf.Add(b[0], c[0]);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 64.0f);
-        Assert.AreEqual(expected, x.Grad);
+        Assert.AreEqual(expected, x.Grad.Data);
     }
 
     [Test]
@@ -104,8 +104,8 @@ public class TestFunctions
         var z = (x ^ 2) + (y ^ 2);
         z.Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 2.0f);
-        Assert.AreEqual(expected, x.Grad);
-        Assert.AreEqual(expected, y.Grad);
+        Assert.AreEqual(expected, x.Grad.Data);
+        Assert.AreEqual(expected, y.Grad.Data);
     }
     
     [Test]
@@ -120,8 +120,8 @@ public class TestFunctions
         var expectedY = Matrix<float>.Build.Dense(1, 1, 0.04000002f);
         // 2つの勾配の差が小さいかどうかを確認
         var tolerance = 1e-4f;
-        bool isEqualX = x.Grad.AlmostEqual(expectedX, tolerance);
-        bool isEqualY = y.Grad.AlmostEqual(expectedY, tolerance);
+        bool isEqualX = x.Grad.Data.AlmostEqual(expectedX, tolerance);
+        bool isEqualY = y.Grad.Data.AlmostEqual(expectedY, tolerance);
         Assert.IsTrue(isEqualX);
         Assert.IsTrue(isEqualY);
     }
@@ -138,8 +138,8 @@ public class TestFunctions
         var expectedY = Matrix<float>.Build.Dense(1, 1, 8064.0f);
         // 2つの勾配の差が小さいかどうかを確認
         var tolerance = 1e-4f;
-        bool isEqualX = x.Grad.AlmostEqual(expectedX, tolerance);
-        bool isEqualY = y.Grad.AlmostEqual(expectedY, tolerance);
+        bool isEqualX = x.Grad.Data.AlmostEqual(expectedX, tolerance);
+        bool isEqualY = y.Grad.Data.AlmostEqual(expectedY, tolerance);
         Assert.IsTrue(isEqualX);
         Assert.IsTrue(isEqualY);
     }

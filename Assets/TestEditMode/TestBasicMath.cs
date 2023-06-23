@@ -27,8 +27,8 @@ public class TestBasicMath
 		var ys = Dzf.Add(x0, x1);
 		ys[0].Backward();
 		var expected = Matrix<float>.Build.Dense(1, 1, 1.0f);
-		Assert.AreEqual(expected, x0.Grad);
-		Assert.AreEqual(expected, x1.Grad);
+		Assert.AreEqual(expected, x0.Grad.Data);
+		Assert.AreEqual(expected, x1.Grad.Data);
 	}
     
 	[Test]
@@ -38,7 +38,7 @@ public class TestBasicMath
 		var ys = Dzf.Add(x0, x0);
 		ys[0].Backward();
 		var expected = Matrix<float>.Build.Dense(1, 1, 2.0f);
-		Assert.AreEqual(expected, x0.Grad);
+		Assert.AreEqual(expected, x0.Grad.Data);
 	}
 	
 	[Test]
@@ -60,8 +60,8 @@ public class TestBasicMath
 		ys[0].Backward();
 		var expected0 = Matrix<float>.Build.Dense(1, 1, 2.0f);
 		var expected1 = Matrix<float>.Build.Dense(1, 1, 3.0f);
-		Assert.AreEqual(expected0, x0.Grad);
-		Assert.AreEqual(expected1, x1.Grad);
+		Assert.AreEqual(expected0, x0.Grad.Data);
+		Assert.AreEqual(expected1, x1.Grad.Data);
 	}
 	
 	[Test]
@@ -74,8 +74,8 @@ public class TestBasicMath
 		ys.Backward();
 		var expectedA = Matrix<float>.Build.Dense(1, 1, 2.0f);
 		var expectedB = Matrix<float>.Build.Dense(1, 1, 3.0f);
-		Assert.AreEqual(expectedA, a.Grad);
-		Assert.AreEqual(expectedB, b.Grad);
+		Assert.AreEqual(expectedA, a.Grad.Data);
+		Assert.AreEqual(expectedB, b.Grad.Data);
 	}
 	
 }

@@ -39,7 +39,7 @@ namespace DeZeroUnity
 		}
 
 		public abstract List<Matrix<float>> Forward(List<Matrix<float>> xs);
-		public abstract List<Matrix<float>> Backward(List<Matrix<float>> gys);
+		public abstract List<Variable> Backward(List<Variable> gys);
 
 	}
 }

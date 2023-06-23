@@ -13,11 +13,11 @@ namespace DeZeroUnity
 			return ys;
 		}
 		
-		public override List<Matrix<float>> Backward(List<Matrix<float>> gys)
+		public override List<Variable> Backward(List<Variable> gys)
 		{
 			var gy = gys[0];
 			var gx = -gy;
-			var gxs = new List<Matrix<float>> { gx };
+			var gxs = new List<Variable> { gx };
 			return gxs;
 		}
 	}
