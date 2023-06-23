@@ -13,12 +13,12 @@ namespace DeZeroUnity
 			return ys;
 		}
 		
-		public override List<Matrix<float>> Backward(List<Matrix<float>> gys)
+		public override List<Variable> Backward(List<Variable> gys)
 		{
-			var x = Inputs[0].Data;
+			var y = Outputs[0];
 			var gy = gys[0];
-			var gx = gy.PointwiseMultiply(x.PointwiseExp());
-			var gxs = new List<Matrix<float>> { gx };
+			var gx = gy * y;
+			var gxs = new List<Variable> { gx };
 			return gxs;
 		}
 		
