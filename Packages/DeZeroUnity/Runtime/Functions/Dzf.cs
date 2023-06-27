@@ -46,5 +46,20 @@ namespace DeZeroUnity
 		{
 			return new Pow(c).Calculate(new List<Variable> {x});
 		}
+		
+		public static List<Variable> Sin(Variable x)
+		{
+			return new Sin().Calculate(new List<Variable> {x});
+		}
+		
+		public static List<Variable> Cos(Variable x)
+		{
+			return new Cos().Calculate(new List<Variable> {x});
+		}
+		
+		public static List<Variable> Tanh(Variable x)
+		{
+			return new Tanh().Calculate(new List<Variable> {x});
+		}
 	}
 }

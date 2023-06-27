@@ -144,6 +144,21 @@ public class TestFunctions
         Assert.IsTrue(isEqualY);
     }
 
+    [Test]
+    public void TestSecondDerivative()
+    {
+        var x = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
+        var y = (x ^ 4) - (2 * (x ^ 2));
+        y.Backward(false, true);
+        var expected = Matrix<float>.Build.Dense(1, 1, 24.0f);
+        Assert.AreEqual(expected, x.Grad.Data);
+        var gx = x.Grad;
+        x.ClearGrad();
+        gx.Backward();
+        var expected2 = Matrix<float>.Build.Dense(1, 1, 44.0f);
+        Assert.AreEqual(expected2, x.Grad.Data);
+    }
+
     /// <summary>
     /// 勾配確認のための数値微分用メソッド
     /// </summary>
