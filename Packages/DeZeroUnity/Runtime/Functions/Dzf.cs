@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace DeZeroUnity
@@ -60,6 +61,34 @@ namespace DeZeroUnity
 		public static List<Variable> Tanh(Variable x)
 		{
 			return new Tanh().Calculate(new List<Variable> {x});
+		}
+		
+		public static List<Variable> Reshape(Variable x, Tuple<int,int> shape)
+		{
+			if (Equals(x.Shape, shape))
+			{
+				return new List<Variable> {x};
+			}
+			return new Reshape(shape).Calculate(new List<Variable> {x});
+		}
+		
+		public static List<Variable> Transpose(Variable x)
+		{
+			return new Transpose().Calculate(new List<Variable> {x});
+		}
+		
+		public static List<Variable> Sum(Variable x)
+		{
+			return new Sum().Calculate(new List<Variable> {x});
+		}
+		
+		public static List<Variable> BroadcastTo(Variable x, Tuple<int,int> shape)
+		{
+			if (Equals(x.Shape, shape))
+			{
+				return new List<Variable> {x};
+			}
+			return new BroadcastTo(shape).Calculate(new List<Variable> {x});
 		}
 	}
 }

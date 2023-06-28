@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
@@ -157,6 +158,26 @@ public class TestFunctions
         gx.Backward();
         var expected2 = Matrix<float>.Build.Dense(1, 1, 44.0f);
         Assert.AreEqual(expected2, x.Grad.Data);
+    }
+
+    [Test]
+    public void TestReshape()
+    {
+        var x = new Variable(Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 3, 4, 5, 6 }));
+        var y = Dzf.Reshape(x, new Tuple<int, int>(6, 1));
+        y[0].Backward();
+        var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 1, 1, 1, 1 });
+        Assert.AreEqual(expected, x.Grad.Data);
+    }
+    
+    [Test]
+    public void TestTranspose()
+    {
+        var x = new Variable(Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 3, 4, 5, 6 }));
+        var y = Dzf.Transpose(x);
+        y[0].Backward();
+        var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 1, 1, 1, 1 });
+        Assert.AreEqual(expected, x.Grad.Data);
     }
 
     /// <summary>
