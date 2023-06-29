@@ -190,6 +190,58 @@ public class TestFunctions
         Assert.AreEqual(expected, x.Grad.Data);
     }
 
+    [Test]
+    public void TestAddBroadcast()
+    {
+        var x0 = new Variable(Matrix<float>.Build.Dense(1, 3, new float[] { 1, 2, 3 }));
+        var x1 = new Variable(Matrix<float>.Build.Dense(1, 1, 10));
+        var y = x0 + x1;
+        var expectedY = Matrix<float>.Build.Dense(1, 3, new float[] { 11, 12, 13 });
+        Assert.AreEqual(expectedY, y.Data);
+        y.Backward();
+        var expectedX1 = Matrix<float>.Build.Dense(1, 1, 3);
+        Assert.AreEqual(expectedX1, x1.Grad.Data);
+    }
+    
+    [Test]
+    public void TestMulBroadcast()
+    {
+        var x0 = new Variable(Matrix<float>.Build.Dense(1, 3, new float[] { 1, 2, 3 }));
+        var x1 = new Variable(Matrix<float>.Build.Dense(1, 1, 10));
+        var y = x0 * x1;
+        var expectedY = Matrix<float>.Build.Dense(1, 3, new float[] { 10, 20, 30 });
+        Assert.AreEqual(expectedY, y.Data);
+        y.Backward();
+        var expectedX1 = Matrix<float>.Build.Dense(1, 1, 6);
+        Assert.AreEqual(expectedX1, x1.Grad.Data);
+    }
+
+    [Test]
+    public void TestSubBroadcast()
+    {
+        var x0 = new Variable(Matrix<float>.Build.Dense(1, 3, new float[] { 1, 2, 3 }));
+        var x1 = new Variable(Matrix<float>.Build.Dense(1, 1, 10));
+        var y = x0 - x1;
+        var expectedY = Matrix<float>.Build.Dense(1, 3, new float[] { -9, -8, -7 });
+        Assert.AreEqual(expectedY, y.Data);
+        y.Backward();
+        var expectedX1 = Matrix<float>.Build.Dense(1, 1, -3);
+        Assert.AreEqual(expectedX1, x1.Grad.Data);
+    }
+    
+    [Test]
+    public void TestDivBroadcast()
+    {
+        var x0 = new Variable(Matrix<float>.Build.Dense(1, 3, new float[] { 1, 2, 3 }));
+        var x1 = new Variable(Matrix<float>.Build.Dense(1, 1, 10));
+        var y = x0 / x1;
+        var expectedY = Matrix<float>.Build.Dense(1, 3, new float[] { 0.1f, 0.2f, 0.3f });
+        Assert.AreEqual(expectedY, y.Data);
+        y.Backward();
+        var expectedX1 = Matrix<float>.Build.Dense(1, 1, -0.06f);
+        Assert.AreEqual(expectedX1, x1.Grad.Data);
+    }
+
     /// <summary>
     /// 勾配確認のための数値微分用メソッド
     /// </summary>
