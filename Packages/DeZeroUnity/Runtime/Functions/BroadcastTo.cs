@@ -24,7 +24,9 @@ namespace DeZeroUnity
 
 		public override List<Variable> Backward(List<Variable> gys)
 		{
-			throw new System.NotImplementedException();
+			var gy = gys[0];
+			var gx = Dzf.SumTo(gy, XShape);
+			return gx;
 		}
 		
 	}

@@ -180,6 +180,16 @@ public class TestFunctions
         Assert.AreEqual(expected, x.Grad.Data);
     }
 
+    [Test]
+    public void TestSum()
+    {
+        var x = new Variable(Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 3, 4, 5, 6 }));
+        var y = Dzf.Sum(x);
+        y[0].Backward();
+        var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 1, 1, 1, 1 });
+        Assert.AreEqual(expected, x.Grad.Data);
+    }
+
     /// <summary>
     /// 勾配確認のための数値微分用メソッド
     /// </summary>

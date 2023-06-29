@@ -90,5 +90,14 @@ namespace DeZeroUnity
 			}
 			return new BroadcastTo(shape).Calculate(new List<Variable> {x});
 		}
+		
+		public static List<Variable> SumTo(Variable x, Tuple<int,int> shape)
+		{
+			if (Equals(x.Shape, shape))
+			{
+				return new List<Variable> {x};
+			}
+			return new SumTo(shape).Calculate(new List<Variable> {x});
+		}
 	}
 }

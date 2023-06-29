@@ -55,5 +55,44 @@ namespace DeZeroUnity
 			
 		}
 		
+		public static Matrix<float> SumToMatrix(Matrix<float> x, Tuple<int, int> shape)
+		{
+			// xの要素についてshapeの形状になるように足し合わせる
+			if (x.RowCount == shape.Item1 && x.ColumnCount == shape.Item2)
+			{
+				return x;
+			}
+			else if (shape.Item1 == 1 && x.ColumnCount == shape.Item2)
+			{
+				var y = Matrix<float>.Build.Dense(shape.Item1, shape.Item2);
+				for (int j = 0; j < shape.Item2; j++)
+				{
+					for (int i = 0; i < x.RowCount; i++)
+					{
+						y[0, j] += x[i, j];
+					}
+				}
+				return y;
+			}
+			else if (x.RowCount == shape.Item1 && shape.Item2 == 1)
+			{
+				var y = Matrix<float>.Build.Dense(shape.Item1, shape.Item2);
+				for (int i = 0; i < shape.Item1; i++)
+				{
+					for (int j = 0; j < x.ColumnCount; j++)
+					{
+						y[i, 0] += x[i, j];
+					}
+				}
+
+				return y;
+			}
+			else
+			{
+				throw new Exception("shapeの形状になるように足し合わせることができません");
+			}
+		
+		}
+		
 	}
 }
