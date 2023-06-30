@@ -186,6 +186,8 @@ public class TestFunctions
         var x = new Variable(Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 3, 4, 5, 6 }));
         var y = Dzf.Sum(x);
         y[0].Backward();
+        //var expectedY = Matrix<float>.Build.Dense(1, 3, new float[] { 5, 7, 9 });
+        //Assert.AreEqual(expectedY, y[0].Data);
         var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 1, 1, 1, 1 });
         Assert.AreEqual(expected, x.Grad.Data);
     }

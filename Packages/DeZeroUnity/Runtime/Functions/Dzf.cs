@@ -77,9 +77,9 @@ namespace DeZeroUnity
 			return new Transpose().Calculate(new List<Variable> {x});
 		}
 		
-		public static List<Variable> Sum(Variable x)
+		public static List<Variable> Sum(Variable x, int? axis = null)
 		{
-			return new Sum().Calculate(new List<Variable> {x});
+			return new Sum(axis).Calculate(new List<Variable> {x});
 		}
 		
 		public static List<Variable> BroadcastTo(Variable x, Tuple<int,int> shape)

@@ -5,15 +5,58 @@ namespace DeZeroUnity
 {
 	public class MatrixUtils
 	{
-		public static float SumMatrix(Matrix<float> x)
+		public static Matrix<float> SumMatrix(Matrix<float> x, int? axis = null)
 		{
-			var array = x.ToRowMajorArray();
-			float sum = 0;
-			foreach (var element in array)
+			if (axis == null)
 			{
-				sum += element;
+				// 全ての要素を足し合わせて1x1の行列を返す
+				var sum = 0f;
+				for (int i = 0; i < x.RowCount; i++)
+				{
+					for (int j = 0; j < x.ColumnCount; j++)
+					{
+						sum += x[i, j];
+					}
+				}
+				
+				return Matrix<float>.Build.Dense(1, 1, sum);
 			}
-			return sum;
+			else if (axis == 0)
+			{
+				return Matrix<float>.Build.DenseOfColumnVectors(x.ColumnSums());
+			}
+			else if (axis == 1)
+			{
+				return Matrix<float>.Build.DenseOfRowVectors(x.RowSums());
+			}
+			else
+			{
+				throw new Exception("axisの値が不正です");
+			}
+
+
+		}
+		
+		public static Matrix<float> ReshapeMatrix(Matrix<float> x, Tuple<int,int> shape)
+		{
+			var rows = shape.Item1;
+			var columns = shape.Item2;
+			
+			if (x.RowCount * x.ColumnCount != rows * columns)
+			{
+				throw new ArgumentException("The total number of elements does not match the new shape.");
+			}
+			var array = x.ToRowMajorArray();
+			var reshapedArray = new float[rows, columns];
+			int index = 0;
+			for (int i = 0; i < rows; i++)
+			{
+				for (int j = 0; j < columns; j++)
+				{
+					reshapedArray[i, j] = array[index++];
+				}
+			}
+			return Matrix<float>.Build.DenseOfArray(reshapedArray);
 		}
 		
 		public static Matrix<float> BroadcastToMatrix(Matrix<float> x, Tuple<int, int> shape)
@@ -92,6 +135,25 @@ namespace DeZeroUnity
 				throw new Exception("shapeの形状になるように足し合わせることができません");
 			}
 		
+		}
+		
+		public static Matrix<float> ReshapeSumBackward(Matrix<float> gy, Tuple<int, int> shape, int? axis)
+		{
+			int[] newShape = new int[2];
+			if (axis != null)
+			{
+				newShape[(int)axis] = 1;
+			}
+			for (int i = 0; i < gy.RowCount; i++)
+			{
+				if (newShape[i] == 0)
+				{
+					newShape[i] = gy.ColumnCount;
+				}
+			}
+			gy = ReshapeMatrix(gy, new Tuple<int, int>(newShape[0], newShape[1]));
+			
+			return ReshapeMatrix(gy, shape);
 		}
 		
 	}
