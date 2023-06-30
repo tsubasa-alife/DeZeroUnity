@@ -82,6 +82,11 @@ namespace DeZeroUnity
 			return new Sum(axis).Calculate(new List<Variable> {x});
 		}
 		
+		public static List<Variable> MatMul(Variable x, Variable w)
+		{
+			return new MatMul().Calculate(new List<Variable> {x, w});
+		}
+		
 		public static List<Variable> BroadcastTo(Variable x, Tuple<int,int> shape)
 		{
 			if (Equals(x.Shape, shape))

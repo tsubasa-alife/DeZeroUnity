@@ -137,25 +137,6 @@ namespace DeZeroUnity
 			}
 		
 		}
-		
-		public static Matrix<float> ReshapeSumBackward(Matrix<float> gy, Tuple<int, int> shape, int? axis)
-		{
-			int[] newShape = new int[2];
-			if (axis != null)
-			{
-				newShape[(int)axis] = 1;
-			}
-			for (int i = 0; i < gy.RowCount; i++)
-			{
-				if (newShape[i] == 0)
-				{
-					newShape[i] = gy.ColumnCount;
-				}
-			}
-			gy = ReshapeMatrix(gy, new Tuple<int, int>(newShape[0], newShape[1]));
-			
-			return ReshapeMatrix(gy, shape);
-		}
-		
+
 	}
 }

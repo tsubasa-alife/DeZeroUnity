@@ -195,6 +195,21 @@ public class TestFunctions
         var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 1, 1, 1, 1 });
         Assert.AreEqual(expected, x.Grad.Data);
     }
+    
+    [Test]
+    public void TestMatMul()
+    {
+        var x = new Variable(Matrix<float>.Build.DenseOfArray(new float[,] { { 1, 2, 3 }, { 4, 5, 6 } }));
+        var w = new Variable(Matrix<float>.Build.DenseOfArray(new float[,] { { 1, 4 }, { 2, 5 }, { 3, 6 } }));
+        var y = Dzf.MatMul(x, w);
+        y[0].Backward();
+        var expectedY = Matrix<float>.Build.DenseOfArray(new float[,] { { 14, 32 }, { 32, 77 } });
+        Assert.AreEqual(expectedY, y[0].Data);
+        var expectedX = Matrix<float>.Build.DenseOfArray(new float[,] { { 5, 7, 9 }, { 5, 7, 9 } });
+        Assert.AreEqual(expectedX, x.Grad.Data);
+        var expectedW = Matrix<float>.Build.DenseOfArray(new float[,] { { 5, 5 }, { 7, 7 }, { 9, 9 } });
+        Assert.AreEqual(expectedW, w.Grad.Data);
+    }
 
     [Test]
     public void TestAddBroadcast()
