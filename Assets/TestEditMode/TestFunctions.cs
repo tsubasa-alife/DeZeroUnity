@@ -163,9 +163,11 @@ public class TestFunctions
     [Test]
     public void TestReshape()
     {
-        var x = new Variable(Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 3, 4, 5, 6 }));
+        var x = new Variable(Matrix<float>.Build.DenseOfArray(new float[,] { { 1, 2, 3 }, { 4, 5, 6 } }));
         var y = Dzf.Reshape(x, new Tuple<int, int>(6, 1));
         y[0].Backward();
+        var expectedY = Matrix<float>.Build.Dense(6, 1, new float[] { 1, 2, 3, 4, 5, 6 });
+        Assert.AreEqual(expectedY, y[0].Data);
         var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 1, 1, 1, 1 });
         Assert.AreEqual(expected, x.Grad.Data);
     }
@@ -173,9 +175,11 @@ public class TestFunctions
     [Test]
     public void TestTranspose()
     {
-        var x = new Variable(Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 3, 4, 5, 6 }));
+        var x = new Variable(Matrix<float>.Build.DenseOfArray(new float[,] { { 1, 2, 3 }, { 4, 5, 6 } }));
         var y = Dzf.Transpose(x);
         y[0].Backward();
+        var expectedY = Matrix<float>.Build.Dense(3, 2, new float[] { 1, 2, 3, 4, 5, 6 });
+        Assert.AreEqual(expectedY, y[0].Data);
         var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 1, 1, 1, 1 });
         Assert.AreEqual(expected, x.Grad.Data);
     }
@@ -183,11 +187,11 @@ public class TestFunctions
     [Test]
     public void TestSum()
     {
-        var x = new Variable(Matrix<float>.Build.Dense(2, 3, new float[] { 1, 2, 3, 4, 5, 6 }));
-        var y = Dzf.Sum(x);
+        var x = new Variable(Matrix<float>.Build.DenseOfArray(new float[,] { { 1, 2, 3 }, { 4, 5, 6 } }));
+        var y = Dzf.Sum(x, 0);
         y[0].Backward();
-        //var expectedY = Matrix<float>.Build.Dense(1, 3, new float[] { 5, 7, 9 });
-        //Assert.AreEqual(expectedY, y[0].Data);
+        var expectedY = Matrix<float>.Build.Dense(1, 3, new float[] { 5, 7, 9 });
+        Assert.AreEqual(expectedY, y[0].Data);
         var expected = Matrix<float>.Build.Dense(2, 3, new float[] { 1, 1, 1, 1, 1, 1 });
         Assert.AreEqual(expected, x.Grad.Data);
     }

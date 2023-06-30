@@ -1,5 +1,6 @@
 using System;
 using MathNet.Numerics.LinearAlgebra;
+using UnityEngine;
 
 namespace DeZeroUnity
 {
@@ -23,11 +24,11 @@ namespace DeZeroUnity
 			}
 			else if (axis == 0)
 			{
-				return Matrix<float>.Build.DenseOfColumnVectors(x.ColumnSums());
+				return Matrix<float>.Build.DenseOfRowVectors(x.ColumnSums());
 			}
 			else if (axis == 1)
 			{
-				return Matrix<float>.Build.DenseOfRowVectors(x.RowSums());
+				return Matrix<float>.Build.DenseOfColumnVectors(x.RowSums());
 			}
 			else
 			{
