@@ -15,8 +15,7 @@ public class TestFunctions
     public void TestSquareForward()
     {
         var x = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
-        var xs = new List<Variable> { x };
-        var ys = Dzf.Square(xs);
+        var ys = Dzf.Square(x);
         var expected = Matrix<float>.Build.Dense(1, 1, 4.0f);
         Assert.AreEqual(expected, ys[0].Data);
     }
@@ -25,8 +24,7 @@ public class TestFunctions
     public void TestSquareBackward()
     {
         var x = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
-        var xs = new List<Variable> { x };
-        var ys = Dzf.Square(xs);
+        var ys = Dzf.Square(x);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 6.0f);
         Assert.AreEqual(expected, x.Grad.Data);
@@ -36,8 +34,7 @@ public class TestFunctions
     public void TestSquareGradientCheck()
     {
         var x = new Variable(Matrix<float>.Build.Random(1, 1));
-        var xs = new List<Variable> { x };
-        var ys = Dzf.Square(xs);
+        var ys = Dzf.Square(x);
         ys[0].Backward();
         var function = new Square() as Function;
         var numGrad = NumericalDiff(function, x);
@@ -51,8 +48,7 @@ public class TestFunctions
     public void TestExpForward()
     {
         var x = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
-        var xs = new List<Variable> { x };
-        var ys = Dzf.Exp(xs);
+        var ys = Dzf.Exp(x);
         var expected = Matrix<float>.Build.Dense(1, 1, 7.389056f);
         Assert.AreEqual(expected, ys[0].Data);
     }
@@ -61,8 +57,7 @@ public class TestFunctions
     public void TestExpBackward()
     {
         var x = new Variable(Matrix<float>.Build.Dense(1, 1, 3.0f));
-        var xs = new List<Variable> { x };
-        var ys = Dzf.Exp(xs);
+        var ys = Dzf.Exp(x);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 20.085537f);
         Assert.AreEqual(expected, x.Grad.Data);
@@ -72,8 +67,7 @@ public class TestFunctions
     public void TestExpGradientCheck()
     {
         var x = new Variable(Matrix<float>.Build.Random(1, 1));
-        var xs = new List<Variable> { x };
-        var ys = Dzf.Exp(xs);
+        var ys = Dzf.Exp(x);
         ys[0].Backward();
         var function = new Exp() as Function;
         var numGrad = NumericalDiff(function, x);
@@ -87,10 +81,9 @@ public class TestFunctions
     public void TestComplexBackward()
     {
         var x = new Variable(Matrix<float>.Build.Dense(1, 1, 2.0f));
-        var xs = new List<Variable> { x };
-        var a = Dzf.Square(xs);
-        var b = Dzf.Square(a);
-        var c = Dzf.Square(a);
+        var a = Dzf.Square(x);
+        var b = Dzf.Square(a[0]);
+        var c = Dzf.Square(a[0]);
         var ys = Dzf.Add(b[0], c[0]);
         ys[0].Backward();
         var expected = Matrix<float>.Build.Dense(1, 1, 64.0f);
