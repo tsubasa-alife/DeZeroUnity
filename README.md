@@ -1,7 +1,6 @@
 # DeZeroUnity
 ## 概要
 ゼロから作るDeep Learning3のフレームワーク [DeZero](https://github.com/oreilly-japan/deep-learning-from-scratch-3) をUnityで動かせるようにする試みです。  
-（現在作成中、利用できません）
 
 ## インストール方法
 Nugetを利用できるようにするため下記の項目をPackagesのmanifest.json（"dependencies"の上など）に追加してください。
