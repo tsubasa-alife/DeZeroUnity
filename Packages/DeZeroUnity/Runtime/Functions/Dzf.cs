@@ -122,5 +122,10 @@ namespace DeZeroUnity
 			}
 			return new SumTo(shape).Calculate(new List<Variable> {x});
 		}
+		
+		public static List<Variable> MeanSquaredError(Variable x0, Variable x1)
+		{
+			return new MeanSquaredError().Calculate(new List<Variable> {x0, x1});
+		}
 	}
 }

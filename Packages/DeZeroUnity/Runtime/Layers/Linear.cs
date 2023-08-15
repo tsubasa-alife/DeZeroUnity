@@ -14,7 +14,9 @@ namespace DeZeroUnity
 			Params.Add(W);
 			if (!noBias)
 			{
-				Bias = new Parameter(Matrix<float>.Build.Random(outSize, 1));
+				// note: 本来であれば(outsize, 1)の行列を作るべきだが
+				//       BroadCast周りの実装が難しいので(1, 1)の行列を作る
+				Bias = new Parameter(Matrix<float>.Build.Random(1, 1));
 				Params.Add(Bias);
 			}
 		}

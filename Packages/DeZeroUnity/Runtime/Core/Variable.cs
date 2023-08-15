@@ -31,7 +31,7 @@ namespace DeZeroUnity
 			Generation = func.Generation + 1;
 		}
 		
-		public void ClearGrad()
+		public void ClearGrads()
 		{
 			this.Grad = null;
 		}
@@ -91,7 +91,7 @@ namespace DeZeroUnity
 				{
 					foreach (var y in function.Outputs)
 					{
-						y.ClearGrad();
+						y.ClearGrads();
 					}
 				}
 			}

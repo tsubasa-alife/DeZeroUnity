@@ -147,7 +147,7 @@ public class TestFunctions
         var expected = Matrix<float>.Build.Dense(1, 1, 24.0f);
         Assert.AreEqual(expected, x.Grad.Data);
         var gx = x.Grad;
-        x.ClearGrad();
+        x.ClearGrads();
         gx.Backward();
         var expected2 = Matrix<float>.Build.Dense(1, 1, 44.0f);
         Assert.AreEqual(expected2, x.Grad.Data);

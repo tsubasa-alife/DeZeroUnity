@@ -94,7 +94,7 @@ namespace DeZeroUnity
 			}
 			else
 			{
-				throw new Exception("ブロードキャストできません");
+				throw new Exception("ブロードキャストできません" + " " + x + " " + shape);
 			}
 			
 		}

@@ -22,16 +22,16 @@ namespace DeZeroUnity
 
 		public abstract Variable Forward(Variable x);
 		
-		public void ClearGrad()
+		public void ClearGrads()
 		{
 			foreach (var param in Params)
 			{
-				param.ClearGrad();
+				param.ClearGrads();
 			}
 			
 			foreach (var layer in Layers)
 			{
-				layer.ClearGrad();
+				layer.ClearGrads();
 			}
 		}
 		
