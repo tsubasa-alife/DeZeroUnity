@@ -750,6 +750,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21662c56a10c444fa8286c7dd9720b7a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isDontDestroy: 1
   cart: {fileID: 595435608}
   pole: {fileID: 1202066493}
   _force: 12
@@ -1197,12 +1198,12 @@ HingeJoint:
     targetVelocity: 0
     force: 0
     freeSpin: 0
-  m_UseLimits: 0
+  m_UseLimits: 1
   m_ExtendedLimits: 0
   m_UseAcceleration: 0
   m_Limits:
-    min: 0
-    max: 0
+    min: -60
+    max: 60
     bounciness: 0
     bounceMinVelocity: 0.2
     contactDistance: 0
