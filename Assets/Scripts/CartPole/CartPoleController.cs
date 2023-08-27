@@ -2,6 +2,8 @@ using System;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using DeZeroUnity;
+using MathNet.Numerics.LinearAlgebra;
 
 public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 {
@@ -11,11 +13,14 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 	private Rigidbody poleRb;
 	private HingeJoint poleHingeJoint;
 	[SerializeField] private float _force = 15f;
-	[SerializeField] private bool isHeuristic = true;
+	[SerializeField] private ControlMode mode = ControlMode.Manual;
+	[SerializeField] private TextMeshProUGUI episodeLabel;
 	[SerializeField] private TextMeshProUGUI timeLabel;
 	[SerializeField] private TextMeshProUGUI angleLabel;
+	private int episode = 1;
 	private float startTime;
 	private float elapsedTime;
+	private SimpleNN model;
 
 	protected override void doAwake()
 	{
@@ -24,28 +29,43 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		poleHingeJoint = pole.GetComponent<HingeJoint>();
 		startTime = Time.time;
 		elapsedTime = startTime;
+		episodeLabel.text = "Episode: " + episode;
+		model = new SimpleNN(4, 8, 1);
 	}
 
 
 	private void Update()
 	{
-		if (isHeuristic)
+		switch (mode)
 		{
-			if (Input.GetKey(KeyCode.LeftArrow))
+			case ControlMode.Manual:
 			{
-				cartRb.AddForce(Vector3.left * _force);
-			}
+				if (Input.GetKey(KeyCode.LeftArrow))
+				{
+					cartRb.AddForce(Vector3.left * _force);
+				}
 		
-			if (Input.GetKey(KeyCode.RightArrow))
-			{
-				cartRb.AddForce(Vector3.right * _force);
+				if (Input.GetKey(KeyCode.RightArrow))
+				{
+					cartRb.AddForce(Vector3.right * _force);
+				}
+
+				break;
 			}
-		}
-		else
-		{
-			var force = AgentAction();
-			Debug.Log("force: " + force);
-			cartRb.AddForce(Vector3.right * force);
+			case ControlMode.Random:
+			{
+				var force = RandomAction();
+				Debug.Log("force: " + force);
+				cartRb.AddForce(Vector3.right * force);
+				break;
+			}
+			case ControlMode.NN:
+			{
+				var force = NNAction();
+				Debug.Log("force: " + force);
+				cartRb.AddForce(Vector3.right * force);
+				break;
+			}
 		}
 
 		timeLabel.text = "Time: " + (Time.time - elapsedTime).ToString("F2");
@@ -71,11 +91,22 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		return state[0];
 	}
 
-	// AIの行動を実行
-	private float AgentAction()
+	// ランダム行動を実行
+	private float RandomAction()
 	{
 		var force = UnityEngine.Random.Range(-15f, 15f);
 		return force * 10;
+	}
+	
+	// ニューラルネットワークによる行動を実行
+	private float NNAction()
+	{
+		// 状態を取得
+		var state = GetState();
+		// 状態を入力として渡し、行動を取得
+		var action = model.Forward(new Variable(Matrix<float>.Build.Dense(1, 4, state)));
+		// 行動を実行
+		return action.Data[0, 0] * 10;
 	}
 
 	public void Reset()
@@ -95,5 +126,7 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		// タイマーをリセット
 		elapsedTime = Time.time;
 		Debug.Log("Reset完了");
+		episode++;
+		episodeLabel.text = "Episode: " + episode;
 	}
 }
