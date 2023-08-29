@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using DeZeroUnity;
 using MathNet.Numerics.LinearAlgebra;
-using UnityEditor;
 
 public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 {
@@ -18,16 +18,18 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 	[SerializeField] private float _force = 15f;
 	[SerializeField] private ControlMode mode = ControlMode.Manual;
 	[SerializeField] private bool isTrainMode = false;
-	[SerializeField] private bool onTraining = false;
+	private bool onTraining = false;
+	private bool isEndTraining = false;
 	[SerializeField] private TextMeshProUGUI episodeLabel;
 	[SerializeField] private TextMeshProUGUI timeLabel;
 	[SerializeField] private TextMeshProUGUI angleLabel;
 	private int episode = 1;
 	private int interval = 10;
 	private int epochs = 10000;
-	private float progress = 0;
 	private float startTime;
 	private float elapsedTime;
+	private float getObservationSpan = 1f;
+	private float currentTime = 0f;
 	private SimpleNN model;
 	private float lr = 0.2f;
 	private SGD optimizer;
@@ -71,21 +73,41 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 				case ControlMode.Random:
 				{
 					var force = RandomAction();
-					Debug.Log("force: " + force);
 					cartRb.AddForce(Vector3.right * force);
 					break;
 				}
 				case ControlMode.NN:
 				{
 					var force = NNAction();
-					Debug.Log("force: " + force);
 					cartRb.AddForce(Vector3.right * force);
 					break;
 				}
 			}
 
+			if (isTrainMode)
+			{
+				currentTime += Time.deltaTime;
+				if (currentTime > getObservationSpan)
+				{
+					GetObservation();
+					currentTime = 0f;
+				}
+			}
+
 			timeLabel.text = "Time: " + (Time.time - elapsedTime).ToString("F2");
 			angleLabel.text = "Angle: " + poleHingeJoint.angle.ToString("F2");
+		}
+		else
+		{
+			if (isEndTraining)
+			{
+				onTraining = false;
+				episodeLabel.text = "Episode: " + episode;
+				elapsedTime = Time.time;
+				// 物理演算を再開
+				Physics.autoSimulation = true;
+				isEndTraining = false;
+			}
 		}
 	}
 
@@ -105,10 +127,10 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		state[1] = cartRb.velocity.x; // カートの速度
 		state[2] = poleHingeJoint.angle; // ポールの角度
 		state[3] = poleRb.angularVelocity.x; // ポールの角速度
-		Debug.Log("state: " + state[0] + ", " + state[1] + ", " + state[2] + ", " + state[3]);
 		return state;
 	}
 	
+	// 一定時間ごとに訓練用データを作成
 	public void GetObservation()
 	{
 		var state = GetState();
@@ -138,15 +160,15 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 	private void TrainNN()
 	{
 		Debug.Log("CartPole 学習開始");
-		var inputData = trainData.Values.ToList();
-		var groundTruth = trainData.Keys.ToList();
+		var inputData = trainData.Keys.ToList();
+		var groundTruth = trainData.Values.ToList();
 		
 		for (int i = 0; i < epochs; i++)
 		{
 			for (int j = 0; j < inputData.Count; j++)
 			{
 				var x = new Variable(Matrix<float>.Build.Dense(1, 4, inputData[j]));
-				var t = new Variable(Matrix<float>.Build.Dense(1, 1, groundTruth[j]));
+				var t = new Variable(Matrix<float>.Build.Dense(1, 1, new float[] { groundTruth[j] }));
 				
 				var y = model.Forward(x);
 				var loss = Dzf.MeanSquaredError(y, t);
@@ -156,10 +178,10 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 				
 				optimizer.Update();
 			}
-
-			progress = (float)i / epochs;
-			EditorUtility.DisplayProgressBar("CartPole学習中", "epoch:" + i + "(" + (progress * 100).ToString("F0") + "%)",progress);
 		}
+		
+		Debug.Log("CartPole 学習終了");
+		trainData.Clear();
 		
 	}
 
@@ -185,12 +207,11 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		// 一定エピソードごとに学習
 		if (episode % interval == 0 && isTrainMode)
 		{
+			// 一旦物理演算を止める
+			Physics.autoSimulation = false;
 			onTraining = true;
 			episodeLabel.text = "Episode: Training...";
-			TrainNN();
-			onTraining = false;
-			episodeLabel.text = "Episode: " + episode;
-			elapsedTime = Time.time;
+			_ = Task.Run(() => TrainNN());
 		}
 	}
 }

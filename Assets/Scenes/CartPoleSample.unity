@@ -890,8 +890,7 @@ MonoBehaviour:
   pole: {fileID: 1202066493}
   _force: 12
   mode: 2
-  isTrainMode: 0
-  onTraining: 0
+  isTrainMode: 1
   episodeLabel: {fileID: 1136515506}
   timeLabel: {fileID: 99007898}
   angleLabel: {fileID: 82380826}
@@ -1213,8 +1212,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -660, y: 390}
-  m_SizeDelta: {x: 482.9986, y: 32.6727}
+  m_AnchoredPosition: {x: -485.84473, y: 375.8606}
+  m_SizeDelta: {x: 831.3091, y: 60.9515}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1136515506
 MonoBehaviour:
