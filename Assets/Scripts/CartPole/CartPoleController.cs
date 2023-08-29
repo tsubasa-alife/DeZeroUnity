@@ -18,14 +18,17 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 	[SerializeField] private float _force = 15f;
 	[SerializeField] private ControlMode mode = ControlMode.Manual;
 	[SerializeField] private bool isTrainMode = false;
+	private bool shouldTrain = false;
 	private bool onTraining = false;
 	private bool isEndTraining = false;
 	[SerializeField] private TextMeshProUGUI episodeLabel;
 	[SerializeField] private TextMeshProUGUI timeLabel;
 	[SerializeField] private TextMeshProUGUI angleLabel;
 	private int episode = 1;
-	private int interval = 10;
-	private int epochs = 10000;
+	[SerializeField] private int maxEpisode = 100;
+	private float episodeTime = 10f;
+	private int interval = 5;
+	private int epochs = 100;
 	private float startTime;
 	private float elapsedTime;
 	private float getObservationSpan = 1f;
@@ -44,9 +47,17 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		startTime = Time.time;
 		elapsedTime = startTime;
 		episodeLabel.text = "Episode: " + episode;
-		model = new SimpleNN(4, 8, 1);
-		optimizer = new SGD(lr);
-		optimizer.Setup(model);
+		if (mode == ControlMode.NN)
+		{
+			model = new SimpleNN(4, 8, 1);
+			optimizer = new SGD(lr);
+			optimizer.Setup(model);
+		}
+		else
+		{
+			// モードがNNでない場合は訓練モードをオフにする
+			isTrainMode = false;
+		}
 	}
 
 
@@ -101,6 +112,7 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		{
 			if (isEndTraining)
 			{
+				Debug.Log("シミュレーションを再開");
 				onTraining = false;
 				episodeLabel.text = "Episode: " + episode;
 				elapsedTime = Time.time;
@@ -113,9 +125,30 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 
 	private void FixedUpdate()
 	{
-		if (Mathf.Approximately(poleHingeJoint.angle, 60f) || Mathf.Approximately(poleHingeJoint.angle, -60f))
+		if (!onTraining)
 		{
-			Reset();
+			if (Mathf.Approximately(poleHingeJoint.angle, 60f) || Mathf.Approximately(poleHingeJoint.angle, -60f))
+			{
+				Reset();
+			}
+
+			if (Time.time - elapsedTime > episodeTime)
+			{
+				Reset();
+			}
+		}
+	}
+
+	private void LateUpdate()
+	{
+		if (shouldTrain)
+		{
+			// 一旦物理演算を止める
+			Physics.autoSimulation = false;
+			onTraining = true;
+			episodeLabel.text = "Episode: Training...";
+			_ = Task.Run(() => TrainNN());
+			shouldTrain = false;
 		}
 	}
 
@@ -135,7 +168,8 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 	{
 		var state = GetState();
 		var action = model.Forward(new Variable(Matrix<float>.Build.Dense(1, 4, state)));
-		var groundTruth = action.Data[0, 0];
+		// 教師データは、ポールが傾いている方向へより大きな力を加えるようなものを作成
+		var groundTruth = action.Data[0, 0] - (state[2] / 60f);
 		trainData.Add(state, groundTruth);
 	}
 
@@ -157,6 +191,7 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		return action.Data[0, 0] * 150f;
 	}
 
+	// NNの学習を実行
 	private void TrainNN()
 	{
 		Debug.Log("CartPole 学習開始");
@@ -182,7 +217,7 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		
 		Debug.Log("CartPole 学習終了");
 		trainData.Clear();
-		
+		isEndTraining = true;
 	}
 
 	public void Reset()
@@ -204,14 +239,19 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		Debug.Log("Reset完了");
 		episode++;
 		episodeLabel.text = "Episode: " + episode;
-		// 一定エピソードごとに学習
+		if (episode > maxEpisode)
+		{
+			// ゲームを終了
+#if UNITY_EDITOR
+			UnityEditor.EditorApplication.isPlaying = false;
+#else
+			Application.Quit();
+#endif
+		}
+		// 一定エピソードごとに学習フラグを立てる
 		if (episode % interval == 0 && isTrainMode)
 		{
-			// 一旦物理演算を止める
-			Physics.autoSimulation = false;
-			onTraining = true;
-			episodeLabel.text = "Episode: Training...";
-			_ = Task.Run(() => TrainNN());
+			shouldTrain = true;
 		}
 	}
 }
