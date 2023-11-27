@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -45,7 +46,7 @@ namespace DeZeroUnity.Algebra
 				}
 			}
 		}
-		
+
 		/// <summary>
 		/// 転置行列
 		/// </summary>
@@ -76,6 +77,138 @@ namespace DeZeroUnity.Algebra
 				for (int j = 0; j < Columns; j++)
 				{
 					result.Elements[i, j] = Elements[i,j] * Elements[i,j];
+				}
+			}
+			return result;
+		}
+		
+		/// <summary>
+		/// 行列の足し合わせ用メソッド
+		/// </summary>
+		public Matrix Sum(int axis = -1)
+		{
+			if (axis == -1)
+			{
+				// 全ての要素を足し合わせる(1×1の行列になる)
+				float sum = 0.0f;
+				foreach (var element in Elements)
+				{
+					sum += element;
+				}
+				Matrix result = new Matrix(1, 1)
+				{
+					Elements =
+					{
+						[0, 0] = sum
+					}
+				};
+				return result;
+			}
+			
+			if (axis == 0)
+			{
+				// 列ごとに足し合わせる
+				Matrix result = new Matrix(1, Columns);
+				for (int j = 0; j < Columns; j++)
+				{
+					for (int i = 0; i < Rows; i++)
+					{
+						result.Elements[0, j] += Elements[i, j];
+					}
+				}
+				return result;
+			}
+			
+			if (axis == 1)
+			{
+				// 行ごとに足し合わせる
+				Matrix result = new Matrix(Rows, 1);
+				for (int i = 0; i < Rows; i++)
+				{
+					for (int j = 0; j < Columns; j++)
+					{
+						result.Elements[i, 0] += Elements[i, j];
+					}
+				}
+				return result;
+			}
+			
+			throw new System.Exception("axisの値が不正です");
+		}
+
+		/// <summary>
+		/// ブロードキャストを行う
+		/// </summary>
+		/// <param name="row"></param>
+		/// <param name="column"></param>
+		/// <returns></returns>
+		/// <exception cref="Exception"></exception>
+		public Matrix Broadcast(int row, int column)
+		{
+			if (Rows == 1 && Columns == 1)
+			{
+				Matrix result = new Matrix(row, column);
+				for (int i = 0; i < row; i++)
+				{
+					for (int j = 0; j < column; j++)
+					{
+						result.Elements[i, j] = Elements[0, 0];
+					}
+				}
+				return result;
+			}
+			
+			if (Rows == 1 && Columns == column)
+			{
+				Matrix result = new Matrix(row, column);
+				for (int i = 0; i < row; i++)
+				{
+					for (int j = 0; j < column; j++)
+					{
+						result.Elements[i, j] = Elements[0, j];
+					}
+				}
+				return result;
+			}
+			
+			if (Rows == row && Columns == 1)
+			{
+				Matrix result = new Matrix(row, column);
+				for (int i = 0; i < row; i++)
+				{
+					for (int j = 0; j < column; j++)
+					{
+						result.Elements[i, j] = Elements[i, 0];
+					}
+				}
+				return result;
+			}
+			
+			throw new Exception("ブロードキャストできません" + " " + this + " " + row + " " + column);
+		}
+		
+		/// <summary>
+		/// 行列の形状を変形する
+		/// </summary>
+		public Matrix Reshape(int row, int column)
+		{
+			
+			if (!HasSameNumberOfElements(this, row, column))
+			{
+				throw new Exception("指定の形状に変形できません");
+			}
+			
+			Matrix result = new Matrix(row, column);
+			int i = 0;
+			int j = 0;
+			foreach (var element in Elements)
+			{
+				result.Elements[i, j] = element;
+				j += 1;
+				if (j == column)
+				{
+					j = 0;
+					i += 1;
 				}
 			}
 			return result;
@@ -125,11 +258,27 @@ namespace DeZeroUnity.Algebra
 		/// <param name="a"></param>
 		/// <param name="b"></param>
 		/// <returns></returns>
-		public static bool CanProduct(Matrix a, Matrix b)
+		public static bool CanDotProduct(Matrix a, Matrix b)
 		{
 			return a.Columns == b.Rows;
 		}
 		
+		/// <summary>
+		/// 要素数が同じかどうか判定する
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <returns></returns>
+		public static bool HasSameNumberOfElements(Matrix a, Matrix b)
+		{
+			return a.Rows * a.Columns == b.Rows * b.Columns;
+		}
+		
+		public static bool HasSameNumberOfElements(Matrix a, int row, int column)
+		{
+			return a.Rows * a.Columns == row * column;
+		}
+
 		/// <summary>
 		/// 行列どうしの加算
 		/// </summary>
@@ -266,7 +415,7 @@ namespace DeZeroUnity.Algebra
 				return result;
 			}
 			
-			if (CanProduct(a, b))
+			if (CanDotProduct(a, b))
 			{
 				//行列積の場合
 				Matrix result = new Matrix(a.Rows, b.Columns);
