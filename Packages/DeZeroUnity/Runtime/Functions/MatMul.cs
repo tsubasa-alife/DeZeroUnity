@@ -1,16 +1,16 @@
 using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra;
+using DeZeroUnity.Algebra;
 
 namespace DeZeroUnity
 {
 	public class MatMul :Function
 	{
-		public override List<Matrix<float>> Forward(List<Matrix<float>> xs)
+		public override List<Matrix> Forward(List<Matrix> xs)
 		{
 			var x = xs[0];
 			var w = xs[1];
 			var y = x * w;
-			var ys = new List<Matrix<float>> {y};
+			var ys = new List<Matrix> {y};
 			return ys;
 		}
 

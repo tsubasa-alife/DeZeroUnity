@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathNet.Numerics.LinearAlgebra;
 using DeZeroUnity;
+using DeZeroUnity.Algebra;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,7 +20,7 @@ public class DeZeroUnitySample
 		var optimizer = new SGD(lr);
 		optimizer.Setup(model);
 		
-		var inputData = Matrix<float>.Build.DenseOfArray(new float[,]
+		var inputData = new Matrix(new float[,]
 		{
 			{0, 0},
 			{1, 0},
@@ -28,7 +28,7 @@ public class DeZeroUnitySample
 			{1, 1}
 		});
 		
-		var trainData = Matrix<float>.Build.DenseOfArray(new float[,]
+		var trainData = new Matrix(new float[,]
 		{
 			{0},
 			{1},
@@ -38,19 +38,19 @@ public class DeZeroUnitySample
 		
 		Debug.Log("XORSample 学習前の予測");
 		
-		Debug.Log("0, 0 => " + model.Forward(new Variable(Matrix<float>.Build.Dense(1, 2, new float[] {0, 0}))).Data[0,0]);
-		Debug.Log("1, 0 => " + model.Forward(new Variable(Matrix<float>.Build.Dense(1, 2, new float[] {1, 0}))).Data[0,0]);
-		Debug.Log("0, 1 => " + model.Forward(new Variable(Matrix<float>.Build.Dense(1, 2, new float[] {0, 1}))).Data[0,0]);
-		Debug.Log("1, 1 => " + model.Forward(new Variable(Matrix<float>.Build.Dense(1, 2, new float[] {1, 1}))).Data[0,0]);
+		Debug.Log("0, 0 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {0, 0}))).Data.Elements[0,0]);
+		Debug.Log("1, 0 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {1, 0}))).Data.Elements[0,0]);
+		Debug.Log("0, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {0, 1}))).Data.Elements[0,0]);
+		Debug.Log("1, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {1, 1}))).Data.Elements[0,0]);
 		
 		Debug.Log("XORSample 学習開始");
 		
 		for (int i = 0; i < epochs; i++)
 		{
-			for (int j = 0; j < inputData.RowCount; j++)
+			for (int j = 0; j < inputData.Rows; j++)
 			{
-				var x = new Variable(Matrix<float>.Build.Dense(1, 2, new float[] {inputData[j, 0], inputData[j, 1]}));
-				var t = new Variable(Matrix<float>.Build.Dense(1, 1, trainData[j, 0]));
+				var x = new Variable(new Matrix(1, 2, new float[] {inputData.Elements[j, 0], inputData.Elements[j, 1]}));
+				var t = new Variable(new Matrix(1, 1, trainData.Elements[j, 0]));
 				
 				var y = model.Forward(x);
 				var loss = Dzf.MeanSquaredError(y, t);
@@ -68,10 +68,10 @@ public class DeZeroUnitySample
 		EditorUtility.ClearProgressBar();
 		Debug.Log("XORSample 学習完了");
 		Debug.Log("XORSample 学習後の予測");
-		Debug.Log("0, 0 => " + model.Forward(new Variable(Matrix<float>.Build.Dense(1, 2, new float[] {0, 0}))).Data[0,0]);
-		Debug.Log("1, 0 => " + model.Forward(new Variable(Matrix<float>.Build.Dense(1, 2, new float[] {1, 0}))).Data[0,0]);
-		Debug.Log("0, 1 => " + model.Forward(new Variable(Matrix<float>.Build.Dense(1, 2, new float[] {0, 1}))).Data[0,0]);
-		Debug.Log("1, 1 => " + model.Forward(new Variable(Matrix<float>.Build.Dense(1, 2, new float[] {1, 1}))).Data[0,0]);
+		Debug.Log("0, 0 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {0, 0}))).Data.Elements[0,0]);
+		Debug.Log("1, 0 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {1, 0}))).Data.Elements[0,0]);
+		Debug.Log("0, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {0, 1}))).Data.Elements[0,0]);
+		Debug.Log("1, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {1, 1}))).Data.Elements[0,0]);
 
 	}
 	

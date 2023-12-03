@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra;
+using DeZeroUnity.Algebra;
 
 namespace DeZeroUnity
 {
@@ -14,12 +14,12 @@ namespace DeZeroUnity
 		public Tuple<int, int> Shape { get; set; }
 		public Tuple<int, int> XShape { get; set; }
 
-		public override List<Matrix<float>> Forward(List<Matrix<float>> xs)
+		public override List<Matrix> Forward(List<Matrix> xs)
 		{
-			XShape = new Tuple<int, int>(xs[0].RowCount, xs[0].ColumnCount);
+			XShape = new Tuple<int, int>(xs[0].Rows, xs[0].Columns);
 			var x = xs[0];
-			var y = MatrixUtils.BroadcastToMatrix(x, Shape);
-			return new List<Matrix<float>> { y };
+			var y = x.Broadcast(Shape.Item1, Shape.Item2);
+			return new List<Matrix> { y };
 		}
 
 		public override List<Variable> Backward(List<Variable> gys)
