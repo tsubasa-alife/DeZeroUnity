@@ -1,7 +1,7 @@
 {
   "name": "jp.hizono.dezerounity",
   "author": "Tsubasa Hizono",
-  "version": "0.1.0-exp",
+  "version": "0.1.1-exp",
   "displayName": "DeZeroUnity",
   "description": "Deep Learning framework package for Unity",
   "license": "MIT",
