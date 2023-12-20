@@ -1,15 +1,15 @@
 using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra;
+using DeZeroUnity.Algebra;
 
 namespace DeZeroUnity
 {
 	public class Transpose : Function
 	{
-		public override List<Matrix<float>> Forward(List<Matrix<float>> xs)
+		public override List<Matrix> Forward(List<Matrix> xs)
 		{
 			var x = xs[0];
 			var y = x.Transpose();
-			return new List<Matrix<float>> { y };
+			return new List<Matrix> { y };
 		}
 		
 		public override List<Variable> Backward(List<Variable> gys)

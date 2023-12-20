@@ -6,7 +6,7 @@ using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 using DeZeroUnity;
-using MathNet.Numerics.LinearAlgebra;
+using DeZeroUnity.Algebra;
 
 public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 {
@@ -167,9 +167,9 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 	public void GetObservation()
 	{
 		var state = GetState();
-		var action = model.Forward(new Variable(Matrix<float>.Build.Dense(1, 4, state)));
+		var action = model.Forward(new Variable(new Matrix(1, 4, state)));
 		// 教師データは、ポールが傾いている方向へより大きな力を加えるようなものを作成
-		var groundTruth = action.Data[0, 0] - (state[2] / 60f);
+		var groundTruth = action.Data.Elements[0, 0] - (state[2] / 60f);
 		trainData.Add(state, groundTruth);
 	}
 
@@ -186,9 +186,9 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		// 状態を取得
 		var state = GetState();
 		// 状態を入力として渡し、行動を取得
-		var action = model.Forward(new Variable(Matrix<float>.Build.Dense(1, 4, state)));
+		var action = model.Forward(new Variable(new Matrix(1, 4, state)));
 		// 行動を実行
-		return action.Data[0, 0] * 150f;
+		return action.Data.Elements[0, 0] * 150f;
 	}
 
 	// NNの学習を実行
@@ -202,8 +202,8 @@ public class CartPoleController : SingletonMonoBehaviour<CartPoleController>
 		{
 			for (int j = 0; j < inputData.Count; j++)
 			{
-				var x = new Variable(Matrix<float>.Build.Dense(1, 4, inputData[j]));
-				var t = new Variable(Matrix<float>.Build.Dense(1, 1, new float[] { groundTruth[j] }));
+				var x = new Variable(new Matrix(1, 4, inputData[j]));
+				var t = new Variable(new Matrix(1, 1, new float[] { groundTruth[j] }));
 				
 				var y = model.Forward(x);
 				var loss = Dzf.MeanSquaredError(y, t);

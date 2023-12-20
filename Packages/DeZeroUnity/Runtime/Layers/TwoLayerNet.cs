@@ -1,5 +1,3 @@
-using MathNet.Numerics.LinearAlgebra;
-
 namespace DeZeroUnity
 {
 	public class TwoLayerNet : Layer

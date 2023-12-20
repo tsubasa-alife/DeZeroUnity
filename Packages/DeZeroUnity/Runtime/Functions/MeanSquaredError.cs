@@ -1,26 +1,19 @@
 using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra;
+using DeZeroUnity.Algebra;
 
 namespace DeZeroUnity
 {
 	public class MeanSquaredError : Function
 	{
-		public override List<Matrix<float>> Forward(List<Matrix<float>> xs)
+		public override List<Matrix> Forward(List<Matrix> xs)
 		{
-			var ys = new List<Matrix<float>>();
+			var ys = new List<Matrix>();
 			var x0 = xs[0];
 			var x1 = xs[1];
 			var diff = x0 - x1;
-			var square = diff.PointwisePower(2);
-			var sum = Matrix<float>.Build.Dense(1, 1, 0);
-			for (int i = 0; i < square.RowCount; i++)
-			{
-				for (int j = 0; j < square.ColumnCount; j++)
-				{
-					sum[0, 0] += square[i, j];
-				}
-			}
-			var y = Matrix<float>.Build.Dense(1, 1, sum[0, 0] / square.RowCount);
+			var square = diff.Power();
+			var sum = square.Sum();
+			var y = new Matrix(1, 1, sum.Elements[0, 0] / square.Rows);
 			ys.Add(y);
 			return ys;
 		}

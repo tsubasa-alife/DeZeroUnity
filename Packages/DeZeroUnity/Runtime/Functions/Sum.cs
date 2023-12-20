@@ -1,24 +1,24 @@
 using System;
 using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra;
+using DeZeroUnity.Algebra;
 
 namespace DeZeroUnity
 {
 	public class Sum : Function
 	{
-		public Sum(int? axis)
+		public Sum(int axis = -1)
 		{
 			Axis = axis;
 		}
 		
 		public Tuple<int,int> XShape { get; set; }
-		public int? Axis { get; set; }
+		public int Axis { get; set; }
 
-		public override List<Matrix<float>> Forward(List<Matrix<float>> xs)
+		public override List<Matrix> Forward(List<Matrix> xs)
 		{
-			XShape = new Tuple<int, int>(xs[0].RowCount, xs[0].ColumnCount);
-			var y = MatrixUtils.SumMatrix(xs[0], Axis);
-			var ys = new List<Matrix<float>> { y };
+			XShape = new Tuple<int, int>(xs[0].Rows, xs[0].Columns);
+			var y = xs[0].Sum(Axis);
+			var ys = new List<Matrix> { y };
 			return ys;
 		}
 		

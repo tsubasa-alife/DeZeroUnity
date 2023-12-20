@@ -1,28 +1,26 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathNet.Numerics;
-using MathNet.Numerics.LinearAlgebra;
-using MathNet.Numerics.LinearAlgebra.Single;
+using DeZeroUnity.Algebra;
 
 namespace DeZeroUnity
 {
 	public class Variable
 	{
-		public Variable(Matrix<float> data)
+		public Variable(Matrix data)
 		{
 			Data = data;
 			Generation = 0;
 		}
 	
-		public Matrix<float> Data { get; set; }
+		public Matrix Data { get; set; }
 		public Variable Grad { get; set; }
 		private Function Creator { get; set; }
 		public int Generation { get; set; }
 		
-		public Tuple<int, int> Shape => new Tuple<int, int>(Data.RowCount, Data.ColumnCount);
-		public int Ndim => Data.RowCount;
-		public int Size => Data.RowCount * Data.ColumnCount;
+		public Tuple<int, int> Shape => new Tuple<int, int>(Data.Rows, Data.Columns);
+		public int Ndim => Data.Rows;
+		public int Size => Data.Rows * Data.Columns;
 
 
 		public void SetCreator(Function func)
@@ -50,7 +48,7 @@ namespace DeZeroUnity
 		{
 			if (this.Grad == null)
 			{
-				this.Grad = new Variable(Matrix<float>.Build.Dense(Data.RowCount, Data.ColumnCount, 1.0f));
+				this.Grad = new Variable(new Matrix(Data.Rows, Data.Columns, 1.0f));
 			}
 			
 			var functions = new Stack<Function>();
@@ -105,13 +103,13 @@ namespace DeZeroUnity
 		
 		public static Variable operator +(Variable a, float b)
 		{
-			var bVar = new Variable(Matrix<float>.Build.Dense(a.Data.RowCount, a.Data.ColumnCount, b));
+			var bVar = new Variable(new Matrix(a.Data.Rows, a.Data.Columns, b));
 			return Dzf.Add(a, bVar)[0];
 		}
 		
 		public static Variable operator +(float a, Variable b)
 		{
-			var aVar = new Variable(Matrix<float>.Build.Dense(b.Data.RowCount, b.Data.ColumnCount, a));
+			var aVar = new Variable(new Matrix(b.Data.Rows, b.Data.Columns, a));
 			return Dzf.Add(aVar, b)[0];
 		}
 		
@@ -127,13 +125,13 @@ namespace DeZeroUnity
 		
 		public static Variable operator -(Variable a, float b)
 		{
-			var bVar = new Variable(Matrix<float>.Build.Dense(a.Data.RowCount, a.Data.ColumnCount, b));
+			var bVar = new Variable(new Matrix(a.Data.Rows, a.Data.Columns, b));
 			return Dzf.Sub(a, bVar)[0];
 		}
 		
 		public static Variable operator -(float a, Variable b)
 		{
-			var aVar = new Variable(Matrix<float>.Build.Dense(b.Data.RowCount, b.Data.ColumnCount, a));
+			var aVar = new Variable(new Matrix(b.Data.Rows, b.Data.Columns, a));
 			return Dzf.Sub(aVar, b)[0];
 		}
 		
@@ -144,13 +142,13 @@ namespace DeZeroUnity
 		
 		public static Variable operator *(Variable a, float b)
 		{
-			var bVar = new Variable(Matrix<float>.Build.Dense(a.Data.RowCount, a.Data.ColumnCount, b));
+			var bVar = new Variable(new Matrix(a.Data.Rows, a.Data.Columns, b));
 			return Dzf.Mul(a, bVar)[0];
 		}
 		
 		public static Variable operator *(float a, Variable b)
 		{
-			var aVar = new Variable(Matrix<float>.Build.Dense(b.Data.RowCount, b.Data.ColumnCount, a));
+			var aVar = new Variable(new Matrix(b.Data.Rows, b.Data.Columns, a));
 			return Dzf.Mul(aVar, b)[0];
 		}
 		
@@ -161,13 +159,13 @@ namespace DeZeroUnity
 		
 		public static Variable operator /(Variable a, float b)
 		{
-			var bVar = new Variable(Matrix<float>.Build.Dense(a.Data.RowCount, a.Data.ColumnCount, b));
+			var bVar = new Variable(new Matrix(a.Data.Rows, a.Data.Columns, b));
 			return Dzf.Div(a, bVar)[0];
 		}
 		
 		public static Variable operator /(float a, Variable b)
 		{
-			var aVar = new Variable(Matrix<float>.Build.Dense(b.Data.RowCount, b.Data.ColumnCount, a));
+			var aVar = new Variable(new Matrix(b.Data.Rows, b.Data.Columns, a));
 			return Dzf.Div(aVar, b)[0];
 		}
 		

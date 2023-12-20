@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using MathNet.Numerics.LinearAlgebra;
+using DeZeroUnity.Algebra;
 
 namespace DeZeroUnity
 {
@@ -13,7 +13,7 @@ namespace DeZeroUnity
 
 		public List<Variable> Calculate(List<Variable> inputs)
 		{
-			var xs = new List<Matrix<float>>();
+			var xs = new List<Matrix>();
 			foreach (var input in inputs)
 			{
 				xs.Add(input.Data);
@@ -38,7 +38,7 @@ namespace DeZeroUnity
 			return outputs;
 		}
 
-		public abstract List<Matrix<float>> Forward(List<Matrix<float>> xs);
+		public abstract List<Matrix> Forward(List<Matrix> xs);
 		public abstract List<Variable> Backward(List<Variable> gys);
 
 	}

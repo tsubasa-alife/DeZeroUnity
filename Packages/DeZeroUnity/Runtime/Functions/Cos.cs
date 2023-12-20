@@ -1,15 +1,15 @@
 using System.Collections.Generic;
-using MathNet.Numerics.LinearAlgebra;
+using DeZeroUnity.Algebra;
 
 namespace DeZeroUnity
 {
 	public class Cos : Function
 	{
-		public override List<Matrix<float>> Forward(List<Matrix<float>> xs)
+		public override List<Matrix> Forward(List<Matrix> xs)
 		{
-			var ys = new List<Matrix<float>>();
+			var ys = new List<Matrix>();
 			var x = xs[0];
-			ys.Add(x.PointwiseCos());
+			ys.Add(x.Cos());
 			return ys;
 		}
 		

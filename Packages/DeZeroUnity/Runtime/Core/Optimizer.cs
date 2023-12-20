@@ -1,5 +1,8 @@
 namespace DeZeroUnity
 {
+	/// <summary>
+	/// 最適化メソッドを集めたクラス
+	/// </summary>
 	public abstract class Optimizer
 	{
 		public Optimizer()

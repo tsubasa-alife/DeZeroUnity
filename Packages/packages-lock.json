@@ -183,16 +183,7 @@
       "version": "file:DeZeroUnity",
       "depth": 0,
       "source": "embedded",
-      "dependencies": {
-        "org.nuget.mathnet.numerics": "5.0.0"
-      }
-    },
-    "org.nuget.mathnet.numerics": {
-      "version": "5.0.0",
-      "depth": 0,
-      "source": "registry",
-      "dependencies": {},
-      "url": "https://unitynuget-registry.azurewebsites.net"
+      "dependencies": {}
     },
     "com.unity.modules.ai": {
       "version": "1.0.0",
