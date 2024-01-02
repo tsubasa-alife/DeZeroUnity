@@ -1,6 +1,6 @@
 namespace DeZeroUnity
 {
-	public class TwoLayerNet : Layer
+	public class TwoLayerNet : Model
 	{
 		public Layer L1 { get; set; }
 		public Layer L2 { get; set; }

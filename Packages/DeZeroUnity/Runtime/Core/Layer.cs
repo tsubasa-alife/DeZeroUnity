@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace DeZeroUnity
@@ -32,6 +33,29 @@ namespace DeZeroUnity
 			{
 				layer.ClearGrads();
 			}
+		}
+		
+		/// <summary>
+		/// パラメタを一つのリストにまとめる
+		/// </summary>
+		public List<float[,]> FlattenParams()
+		{
+			var result = new List<float[,]>();
+			
+			foreach (var param in Params)
+			{
+				result.Add(param.Data.Elements);
+			}
+			
+			foreach (var layer in Layers)
+			{
+				foreach (var param in layer.Params)
+				{
+					result.Add(param.Data.Elements);
+				}
+			}
+
+			return result;
 		}
 		
 		

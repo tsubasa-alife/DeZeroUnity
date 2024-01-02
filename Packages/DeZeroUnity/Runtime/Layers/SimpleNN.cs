@@ -1,6 +1,6 @@
 namespace DeZeroUnity
 {
-	public class SimpleNN : Layer
+	public class SimpleNN : Model
 	{
 		public Layer L1 { get; set; }
 		public Layer L2 { get; set; }

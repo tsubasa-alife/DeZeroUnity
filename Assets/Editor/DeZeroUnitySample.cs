@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DeZeroUnity;
 using DeZeroUnity.Algebra;
@@ -73,6 +74,20 @@ public class DeZeroUnitySample
 		Debug.Log("0, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {0, 1}))).Data.Elements[0,0]);
 		Debug.Log("1, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {1, 1}))).Data.Elements[0,0]);
 
+		var savePath = Path.Combine(ModelIO.GetDefaultModelPath(), "test.nn");
+		ModelIO.Save(model, savePath);
+		Debug.Log("モデルの保存完了 " + savePath);
+		
+		// モデルの読み込み
+		var loadedModel = new TwoLayerNet(2, 3, 1);
+		ModelIO.Load(loadedModel, savePath);
+		Debug.Log("モデルの読み込み完了 " + savePath);
+		
+		Debug.Log("XORSample モデル読み込み後の予測");
+		Debug.Log("0, 0 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {0, 0}))).Data.Elements[0,0]);
+		Debug.Log("1, 0 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {1, 0}))).Data.Elements[0,0]);
+		Debug.Log("0, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {0, 1}))).Data.Elements[0,0]);
+		Debug.Log("1, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {1, 1}))).Data.Elements[0,0]);
 	}
 	
 }

@@ -8,7 +8,7 @@ namespace DeZeroUnity.Algebra
 
 		public int Columns { get; }
 
-		public float[,] Elements { get; }
+		public float[,] Elements { get; set; }
 		
 		/// <summary>
 		/// コンストラクタ
