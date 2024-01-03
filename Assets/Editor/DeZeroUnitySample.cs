@@ -84,10 +84,10 @@ public class DeZeroUnitySample
 		Debug.Log("モデルの読み込み完了 " + savePath);
 		
 		Debug.Log("XORSample モデル読み込み後の予測");
-		Debug.Log("0, 0 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {0, 0}))).Data.Elements[0,0]);
-		Debug.Log("1, 0 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {1, 0}))).Data.Elements[0,0]);
-		Debug.Log("0, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {0, 1}))).Data.Elements[0,0]);
-		Debug.Log("1, 1 => " + model.Forward(new Variable(new Matrix(1, 2, new float[] {1, 1}))).Data.Elements[0,0]);
+		Debug.Log("0, 0 => " + loadedModel.Forward(new Variable(new Matrix(1, 2, new float[] {0, 0}))).Data.Elements[0,0]);
+		Debug.Log("1, 0 => " + loadedModel.Forward(new Variable(new Matrix(1, 2, new float[] {1, 0}))).Data.Elements[0,0]);
+		Debug.Log("0, 1 => " + loadedModel.Forward(new Variable(new Matrix(1, 2, new float[] {0, 1}))).Data.Elements[0,0]);
+		Debug.Log("1, 1 => " + loadedModel.Forward(new Variable(new Matrix(1, 2, new float[] {1, 1}))).Data.Elements[0,0]);
 	}
 	
 }
