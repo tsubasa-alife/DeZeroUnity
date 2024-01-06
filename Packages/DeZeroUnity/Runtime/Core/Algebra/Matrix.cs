@@ -2,6 +2,9 @@ using System;
 
 namespace DeZeroUnity.Algebra
 {
+	/// <summary>
+	/// DeZeroUnity用の行列計算用クラス
+	/// </summary>
 	public class Matrix
 	{
 		public int Rows { get; }
@@ -11,8 +14,10 @@ namespace DeZeroUnity.Algebra
 		public float[,] Elements { get; set; }
 		
 		/// <summary>
-		/// コンストラクタ
+		/// 0で初期化
 		/// </summary>
+		/// <param name="row">行数</param>
+		/// <param name="column">列数</param>
 		public Matrix(int row, int column)
 		{
 			Rows = row;
@@ -21,6 +26,12 @@ namespace DeZeroUnity.Algebra
 			Zero();
 		}
 		
+		/// <summary>
+		/// 標準正規分布で初期化
+		/// </summary>
+		/// <param name="row">行数</param>
+		/// <param name="column">列数</param>
+		/// <param name="rand"></param>
 		public Matrix(int row, int column, Random rand)
 		{
 			Rows = row;
@@ -29,6 +40,12 @@ namespace DeZeroUnity.Algebra
 			NormalRandomInit(rand);
 		}
 
+		/// <summary>
+		/// 特定の値で初期化
+		/// </summary>
+		/// <param name="row">行数</param>
+		/// <param name="column">列数</param>
+		/// <param name="value">初期値</param>
 		public Matrix(int row, int column, float value)
 		{
 			Rows = row;
@@ -37,6 +54,10 @@ namespace DeZeroUnity.Algebra
 			InitWithValue(value);
 		}
 		
+		/// <summary>
+		/// 特定の二次元配列による初期化
+		/// </summary>
+		/// <param name="elements"></param>
 		public Matrix(float[,] elements)
 		{
 			Rows = elements.GetLength(0);
@@ -44,6 +65,12 @@ namespace DeZeroUnity.Algebra
 			Elements = elements;
 		}
 		
+		/// <summary>
+		/// 特定の一次元配列による初期化
+		/// </summary>
+		/// <param name="row">行数</param>
+		/// <param name="column">列数</param>
+		/// <param name="elements"></param>
 		public Matrix(int row, int column, float[] elements)
 		{
 			Rows = row;
@@ -92,8 +119,9 @@ namespace DeZeroUnity.Algebra
 		}
 
 		/// <summary>
-		/// 正規乱数で初期化
+		/// 標準正規分布で初期化
 		/// </summary>
+		/// <param name="rand"></param>
 		public void NormalRandomInit(Random rand)
 		{
 			for (int i = 0; i < Rows; i++)
@@ -108,7 +136,7 @@ namespace DeZeroUnity.Algebra
 		/// <summary>
 		/// 特定の値で初期化
 		/// </summary>
-		/// <param name="value"></param>
+		/// <param name="value">初期値</param>
 		public void InitWithValue(float value)
 		{
 			for (int i = 0; i < Rows; i++)
@@ -225,8 +253,11 @@ namespace DeZeroUnity.Algebra
 		}
 
 		/// <summary>
-		/// 行列の足し合わせ用メソッド
+		/// 行列の足し合わせ
 		/// </summary>
+		/// <param name="axis">足す方向（-1:全て、0:列ごと、1:行ごと）</param>
+		/// <returns></returns>
+		/// <exception cref="Exception"></exception>
 		public Matrix Sum(int axis = -1)
 		{
 			if (axis == -1)
@@ -471,6 +502,14 @@ namespace DeZeroUnity.Algebra
 			return a.Rows * a.Columns == row * column;
 		}
 		
+		/// <summary>
+		/// 近似比較用メソッド（主にテスト用）
+		/// </summary>
+		/// <param name="a"></param>
+		/// <param name="b"></param>
+		/// <param name="tolerance"></param>
+		/// <returns></returns>
+		/// <exception cref="Exception"></exception>
 		public static bool IsAlmostEqual(Matrix a, Matrix b, float tolerance = 0.0001f)
 		{
 			if (!IsSameShape(a, b))
@@ -499,6 +538,10 @@ namespace DeZeroUnity.Algebra
 		/// <returns></returns>
 		public static Matrix operator +(Matrix a, Matrix b)
 		{
+			if (!IsSameShape(a, b))
+			{
+				throw new Exception("形状が異なるため足し算できません");
+			}
 			Matrix result = new Matrix(a.Rows, a.Columns);
 			for (int i = 0; i < a.Rows; i++)
 			{
@@ -574,6 +617,10 @@ namespace DeZeroUnity.Algebra
 		/// <returns></returns>
 		public static Matrix operator -(Matrix a, Matrix b)
 		{
+			if (!IsSameShape(a, b))
+			{
+				throw new Exception("形状が異なるため引き算できません");
+			}
 			Matrix result = new Matrix(a.Rows, a.Columns);
 			for (int i = 0; i < a.Rows; i++)
 			{
@@ -705,7 +752,7 @@ namespace DeZeroUnity.Algebra
 		}
 		
 		/// <summary>
-		/// 行列の割り算(アダマール積、要素積)
+		/// 行列の割り算
 		/// </summary>
 		/// <param name="a"></param>
 		/// <param name="b"></param>
@@ -713,21 +760,21 @@ namespace DeZeroUnity.Algebra
 		/// <exception cref="Exception"></exception>
 		public static Matrix operator /(Matrix a, Matrix b)
 		{
-			if (IsSameShape(a, b))
+			if (!IsSameShape(a, b))
 			{
-				//要素ごとに割り算
-				Matrix result = new Matrix(a.Rows, a.Columns);
-				for (int i = 0; i < a.Rows; i++)
-				{
-					for (int j = 0; j < a.Columns; j++)
-					{
-						result.Elements[i, j] = a.Elements[i, j] / b.Elements[i, j];
-					}
-				}
-				return result;
+				throw new Exception("形状が異なるため割り算できません");
 			}
 			
-			throw new Exception("行列の形状が同じではありません");
+			//要素ごとに割り算
+			Matrix result = new Matrix(a.Rows, a.Columns);
+			for (int i = 0; i < a.Rows; i++)
+			{
+				for (int j = 0; j < a.Columns; j++)
+				{
+					result.Elements[i, j] = a.Elements[i, j] / b.Elements[i, j];
+				}
+			}
+			return result;
 		}
 		
 		/// <summary>
