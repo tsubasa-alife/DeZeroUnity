@@ -1,5 +1,8 @@
 namespace DeZeroUnity
 {
+	/// <summary>
+	/// シンプルなニューラルネットワーク（活性化関数：tanh）
+	/// </summary>
 	public class SimpleNN : Model
 	{
 		public Layer L1 { get; set; }

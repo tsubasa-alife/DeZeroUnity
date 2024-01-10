@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace DeZeroUnity
 {
+	/// <summary>
+	/// レイヤークラス
+	/// </summary>
 	public abstract class Layer
 	{
 		public Layer()
@@ -20,8 +23,16 @@ namespace DeZeroUnity
 			return y;
 		}
 
+		/// <summary>
+		/// 順方向計算
+		/// </summary>
+		/// <param name="x">入力</param>
+		/// <returns></returns>
 		public abstract Variable Forward(Variable x);
 		
+		/// <summary>
+		/// 勾配をリセットする
+		/// </summary>
 		public void ClearGrads()
 		{
 			foreach (var param in Params)

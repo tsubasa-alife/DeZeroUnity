@@ -1,5 +1,8 @@
 namespace DeZeroUnity
 {
+	/// <summary>
+	/// 2層ニューラルネットワーク（活性化関数：シグモイド）
+	/// </summary>
 	public class TwoLayerNet : Model
 	{
 		public Layer L1 { get; set; }

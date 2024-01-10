@@ -5,6 +5,9 @@ using DeZeroUnity.Algebra;
 
 namespace DeZeroUnity
 {
+	/// <summary>
+	/// ニューラルネットワークのパラメタを表すクラス
+	/// </summary>
 	public class Variable
 	{
 		public Variable(Matrix data)
@@ -64,6 +67,8 @@ namespace DeZeroUnity
 					gys.Add(output.Grad);
 				}
 
+				// 逆伝搬するかどうかを局所的に切り替える
+				// pythonでのwith文の代わり
 				using (ConfigUtils.UsingConfig("enableBackprop", createGraph))
 				{
 					var gxs = function.Backward(gys);
